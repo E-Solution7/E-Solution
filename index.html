@@ -3,742 +3,312 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E-Solution | ডিজিটাল নাগরিক ও ই-ভূমি সেবা বাতায়ন</title>
+  <title>E-Solution | ডিজিটাল নাগরিক ও ভূমি সেবা বাতায়ন</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts (Hind Siliguri) -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- React & ReactDOM & Babel -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel Standalone -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    body { font-family: 'Hind Siliguri', sans-serif; }
-    @media print {
-      .no-print { display: none !important; }
-      .print-area { border: 2px solid #047857 !important; box-shadow: none !important; }
-    }
+    body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body>
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // ==========================================
-    // ১. বিশেষ ভূমি সেবা তালিকা (Card #1 Sub-services)
-    // ==========================================
-    const INITIAL_VUMI_SERVICES = [
-      { id: "mutation", title: "ই-নামজারি (মিউটেশন) আবেদন", govtFee: 1170, serviceFee: 330, time: "২৮ কার্যদিবস", icon: "📝", desc: "জমির মালিকানা পরিবর্তন ও নতুন খতিয়ান তৈরির পূর্ণাঙ্গ অনলাইন আবেদন।", docs: ["এনআইডি কার্ড ও ছবি", "জমির দলিলের কপি", "সর্বশেষ খতিয়ান/পর্চা", "ওয়ারিশ সনদ (প্রযোজ্য ক্ষেত্রে)"] },
-      { id: "ldtax", title: "ভূমি উন্নয়ন কর (খাজনা) প্রদান", govtFee: 0, serviceFee: 150, time: "১-৩ কার্যদিবস", icon: "💳", desc: "হোল্ডিং এন্ট্রি ও অনলাইনে খাজনা পরিশোধ করে ডিজিটাল দাখিলা সংগ্রহ।", docs: ["এনআইডি কার্ড", "খতিয়ান নম্বর", "পূর্বের দাখিলা (যদি থাকে)"] },
-      { id: "eporcha", title: "খতিয়ান ও পর্চা (CS/SA/RS/BS)", govtFee: 100, serviceFee: 100, time: "৩-৭ কার্যদিবস", icon: "📜", desc: "যেকোনো খতিয়ানের অনলাইন কপি বা সার্টিফাইড পর্চা উত্তোলনের আবেদন।", docs: ["মৌজার নাম ও জে.এল নং", "খতিয়ান বা দাগ নম্বর", "এনআইডি ও মোবাইল নম্বর"] },
-      { id: "mouzamap", title: "মৌজা ম্যাপ (নকশা) সংগ্রহ", govtFee: 520, serviceFee: 180, time: "৭-১০ কার্যদিবস", icon: "🗺️", desc: "দাগ অনুযায়ী সরকারি মৌজা ম্যাপ বা নকশার সার্টিফাইড কপি সংগ্রহ।", docs: ["মৌজার নাম ও সিট নম্বর", "দাগ নম্বর", "আবেদনকারীর এনআইডি"] },
-      { id: "misccase", title: "মিস কেস ও খতিয়ান সংশোধন", govtFee: 500, serviceFee: 500, time: "৩০-৪৫ কার্যদিবস", icon: "⚖️", desc: "খতিয়ানে নামের বানান, দাগ বা অংশের ভুল সংশোধনের জন্য এসি ল্যান্ড অফিসে আবেদন।", docs: ["ভুল খতিয়ানের কপি", "সঠিক দলিল ও পূর্ববর্তী রেকর্ড", "এনআইডি কার্ড"] },
-      { id: "deedcheck", title: "দলিল তল্লাশি ও সার্টিফাইড কপি", govtFee: 400, serviceFee: 300, time: "৭-১৪ কার্যদিবস", icon: "🔍", desc: "সাব-রেজিস্ট্রি অফিস থেকে দলিলের সত্যতা যাচাই ও নকল উত্তোলন।", docs: ["দলিল নম্বর ও সাল", "সাব-রেজিস্ট্রি অফিসের নাম", "দাতা বা গ্রহীতার নাম"] }
+    const VUMI_SERVICES = [
+      { id: "mutation", title: "ই-নামজারি (মিউটেশন) আবেদন", fee: 1500, time: "২৮ দিন", icon: "📝", desc: "জমির মালিকানা পরিবর্তন ও নতুন খতিয়ান তৈরি।" },
+      { id: "ldtax", title: "ভূমি উন্নয়ন কর (খাজনা) প্রদান", fee: 150, time: "২ দিন", icon: "💳", desc: "অনলাইনে খাজনা পরিশোধ ও দাখিলা সংগ্রহ।" },
+      { id: "eporcha", title: "খতিয়ান ও পর্চা (CS/SA/RS)", fee: 200, time: "৫ দিন", icon: "📜", desc: "অনলাইন কপি বা সার্টিফাইড পর্চা উত্তোলন।" },
+      { id: "mouzamap", title: "মৌজা ম্যাপ (নকশা) সংগ্রহ", fee: 700, time: "৭ দিন", icon: "🗺️", desc: "দাগ অনুযায়ী সরকারি মৌজা ম্যাপ সংগ্রহ।" },
+      { id: "misccase", title: "মিস কেস ও খতিয়ান সংশোধন", fee: 1000, time: "৩০ দিন", icon: "⚖️", desc: "খতিয়ানে নামের বানান বা ভুল সংশোধনের আবেদন।" },
+      { id: "deedcheck", title: "দলিল তল্লাশি ও সার্টিফাইড কপি", fee: 700, time: "১০ দিন", icon: "🔍", desc: "সাব-রেজিস্ট্রি অফিস থেকে দলিলের নকল উত্তোলন।" }
     ];
 
-    // ==========================================
-    // ২. মানুষের ৬টি মৌলিক সেবা (Cards #2 to #7)
-    // ==========================================
-    const INITIAL_MOULIK_SEBA = [
-      {
-        id: "food-agri",
-        number: "মৌলিক সেবা - ১",
-        title: "🌾 খাদ্য ও কৃষি সেবা",
-        subtitle: "কৃষি ভর্তুকি, সার-বীজ, মাটি পরীক্ষা ও খাদ্য নিরাপত্তা কার্ড",
-        icon: "🌾",
-        badgeColor: "bg-lime-100 text-lime-800",
-        fee: 100,
-        time: "৩-৭ দিন",
-        fieldLabel: "কৃষি জমির পরিমাণ ও ফসলের বিবরণ",
-        fieldPlaceholder: "যেমন: ২ বিঘা ধান জমি, কৃষক কার্ড আবেদন",
-        docs: ["জাতীয় পরিচয়পত্র (NID)", "কৃষি ব্লকের নাম", "পাসপোর্ট সাইজ ছবি"],
-        subServices: [
-          "কৃষক স্মার্ট কার্ড ও কৃষি ভর্তুকি আবেদন",
-          "টিসিবি (TCB) ফ্যামিলি কার্ড ও ওএমএস খাদ্য সহায়তা",
-          "ফসলের রোগবালাই পরামর্শ ও মাটি পরীক্ষা বুকিং",
-          "কৃষি যন্ত্রপাতি ও সেচ পাম্পের অনুদান আবেদন"
-        ],
-        tableName: "food_agri_applications",
-        filePath: "src/modules/food-agri/FoodAgriPage.jsx"
-      },
-      {
-        id: "cloth-textile",
-        number: "মৌলিক সেবা - ২",
-        title: "👕 বস্ত্র ও কুটির শিল্প সেবা",
-        subtitle: "তাঁত বোর্ড, ক্ষুদ্র পোশাক উদ্যোক্তা ঋণ ও কারিগরি প্রশিক্ষণ",
-        icon: "👕",
-        badgeColor: "bg-purple-100 text-purple-800",
-        fee: 150,
-        time: "৭-১০ দিন",
-        fieldLabel: "উদ্যোগ বা প্রশিক্ষণের ধরন ও অভিজ্ঞতা",
-        fieldPlaceholder: "যেমন: সেলাই মেশিন অনুদান / ক্ষুদ্র পোশাক কারখানা নিবন্ধন",
-        docs: ["জাতীয় পরিচয়পত্র (NID)", "ট্রেড লাইসেন্স বা নাগরিক সনদ", "উদ্যোক্তা ছবি"],
-        subServices: [
-          "ক্ষুদ্র ও কুটির শিল্প (বিসিক) উদ্যোক্তা নিবন্ধন",
-          "তাঁতী ও বস্ত্র কারিগর স্বল্প সুদে ঋণ আবেদন",
-          "সরকারি সেলাই মেশিন ও ফ্যাশন ডিজাইন প্রশিক্ষণ",
-          "হস্তশিল্প ও দেশীয় বস্ত্রের ই-কমার্স মার্কেট সংযোগ"
-        ],
-        tableName: "textile_applications",
-        filePath: "src/modules/textile/TextilePage.jsx"
-      },
-      {
-        id: "housing",
-        number: "মৌলিক সেবা - ৩",
-        title: "🏢 বাসস্থান ও আবাসন সেবা",
-        subtitle: "বাড়ির প্ল্যান অনুমোদন, গৃহায়ন ঋণ ও হোল্ডিং ট্যাক্স সেবা",
-        icon: "🏢",
-        badgeColor: "bg-amber-100 text-amber-800",
-        fee: 300,
-        time: "১০-১৫ দিন",
-        fieldLabel: "বাড়ির হোল্ডিং নম্বর, তলা ও জমির বিবরণ",
-        fieldPlaceholder: "যেমন: ওয়ার্ড নং ৪, হোল্ডিং ২৫২, ২ তলা ভবনের প্ল্যান",
-        docs: ["জমির নামজারি খতিয়ান ও দলিল", "প্রস্তাবিত ভবনের নকশা", "হোল্ডিং ট্যাক্স রশিদ"],
-        subServices: [
-          "পৌরসভা ও ইউনিয়ন ভবন নির্মাণ প্ল্যান অনুমোদন",
-          "হাউস বিল্ডিং ফাইন্যান্স কর্পোরেশন গৃহঋণ সহায়তা",
-          "হোল্ডিং ট্যাক্স পরিশোধ ও নতুন হোল্ডিং নম্বর আবেদন",
-          "সরকারি আবাসন ও আশ্রয়ণ প্রকল্পের আবেদন"
-        ],
-        tableName: "housing_applications",
-        filePath: "src/modules/housing/HousingPage.jsx"
-      },
-      {
-        id: "education",
-        number: "মৌলিক সেবা - ৪",
-        title: "🎓 শিক্ষা ও দক্ষতা উন্নয়ন সেবা",
-        subtitle: "ভর্তি, উপবৃত্তি, বোর্ড সনদ সংশোধন ও আইটি/ফ্রিল্যান্সিং কোর্স",
-        icon: "🎓",
-        badgeColor: "bg-blue-100 text-blue-800",
-        fee: 120,
-        time: "২-৫ দিন",
-        fieldLabel: "শিক্ষা প্রতিষ্ঠানের নাম, বোর্ড ও রোল/রেজিস্ট্রেশন নং",
-        fieldPlaceholder: "যেমন: দিনাজপুর বোর্ড, এসএসসি রোল ১২৩৪৫৬, নাম সংশোধন",
-        docs: ["জন্ম নিবন্ধন সনদ / এনআইডি", "একাডেমিক ট্রান্সক্রিপ্ট বা প্রবেশপত্র", "শিক্ষার্থীর ছবি"],
-        subServices: [
-          "স্কুল, একাদশ ও বিশ্ববিদ্যালয় অনলাইন ভর্তি আবেদন",
-          "প্রধানমন্ত্রীর শিক্ষা সহায়তা ট্রাস্ট ও উপবৃত্তি আবেদন",
-          "বোর্ড সনদে (SSC/HSC) নাম ও জন্মতারিখ সংশোধন",
-          "সরকারি কারিগরি ও ফ্রিল্যান্সিং প্রশিক্ষণ নিবন্ধন"
-        ],
-        tableName: "education_applications",
-        filePath: "src/modules/education/EducationPage.jsx"
-      },
-      {
-        id: "health",
-        number: "মৌলিক সেবা - ৫",
-        title: "🩺 চিকিৎসা ও স্বাস্থ্য সেবা",
-        subtitle: "ডাক্তার অ্যাপয়েন্টমেন্ট, টেলিমেডিসিন, ব্লাড ব্যাংক ও অ্যাম্বুলেন্স",
-        icon: "🩺",
-        badgeColor: "bg-rose-100 text-rose-800",
-        fee: 100,
-        time: "তাৎক্ষণিক / ২৪ ঘণ্টা",
-        fieldLabel: "রোগীর বয়স, ব্লাড গ্রুপ ও শারীরিক সমস্যার বিবরণ",
-        fieldPlaceholder: "যেমন: বয়স ৪৫, ব্লাড B+, মেডিসিন বিশেষজ্ঞ ডাক্তারের সিরিয়াল",
-        docs: ["রোগীর পূর্বের প্রেসক্রিপশন (যদি থাকে)", "জাতীয় পরিচয়পত্র বা জন্ম সনদ", "জরুরি মোবাইল নম্বর"],
-        subServices: [
-          "বিশেষজ্ঞ ডাক্তারের অনলাইন সিরিয়াল ও টেলিমেডিসিন",
-          "২৪/৭ জরুরি অ্যাম্বুলেন্স ও ব্লাড ডোনার বুকিং",
-          "সরকারি চিকিৎসা অনুদান (ক্যান্সার/কিডনি/হৃদরোগ) আবেদন",
-          "টিকা সনদ (Vaccine Certificate) ও স্বাস্থ্য কার্ড"
-        ],
-        tableName: "health_applications",
-        filePath: "src/modules/health/HealthPage.jsx"
-      },
-      {
-        id: "legal-digital",
-        number: "মৌলিক সেবা - ৬",
-        title: "⚖️ আইনি ও ডিজিটাল নাগরিক সেবা",
-        subtitle: "এনআইডি, ই-পাসপোর্ট, জন্ম নিবন্ধন, পুলিশ ক্লিয়ারেন্স ও জিডি",
-        icon: "⚖️",
-        badgeColor: "bg-teal-100 text-teal-800",
-        fee: 200,
-        time: "৩-১০ দিন",
-        fieldLabel: "এনআইডি / জন্ম সনদ / পাসপোর্ট নম্বর ও সমস্যার বিবরণ",
-        fieldPlaceholder: "যেমন: NID নং ১৯৯০..., পিতার নাম সংশোধন বা নতুন পাসপোর্ট",
-        docs: ["জাতীয় পরিচয়পত্র / জন্ম নিবন্ধন", "নাগরিকত্ব সনদ ও ইউটিলিটি বিলের কপি", "প্রয়োজনীয় প্রমাণপত্র"],
-        subServices: [
-          "নতুন ভোটার (NID) নিবন্ধন ও স্মার্ট কার্ড সংশোধন",
-          "ই-পাসপোর্ট (e-Passport) আবেদন ও পুলিশ ক্লিয়ারেন্স",
-          "অনলাইন জন্ম ও মৃত্যু নিবন্ধন সনদ আবেদন",
-          "অনলাইন জিডি (GD) ও সরকারি লিগ্যাল এইড আইনি সহায়তা"
-        ],
-        tableName: "citizen_legal_applications",
-        filePath: "src/modules/legal-digital/LegalDigitalPage.jsx"
-      }
-    ];
-
-    const INITIAL_AGENTS = [
-      { id: 1, name: "মোঃ শরিফুল ইসলাম (সুপার অ্যাডমিন)", role: "admin", phone: "01700000000", password: "admin", division: "রংপুর", district: "নীলফামারী", upazila: "সদর", center: "ই-সলিউশন প্রধান কার্যালয়" },
-      { id: 2, name: "আব্দুল করিম (উদ্যোক্তা)", role: "agent", phone: "01800000000", password: "123", division: "রংপুর", district: "রংপুর", upazila: "সদর", center: "পৌর ডিজিটাল সেন্টার" },
-      { id: 3, name: "মাহমুদুল হাসান (এজেন্ট)", role: "agent", phone: "01900000000", password: "123", division: "ঢাকা", district: "গাজীপুর", upazila: "শ্রীপুর", center: "নাগরিক সেবা কেন্দ্র" }
+    const MOULIK_SERVICES = [
+      { id: "food", title: "🌾 খাদ্য ও কৃষি সেবা", desc: "কৃষক কার্ড, সার-বীজ ভর্তুকি ও টিসিবি সহায়তা।" },
+      { id: "textile", title: "👕 বস্ত্র ও কুটির শিল্প", desc: "তাঁত বোর্ড, বিসিক নিবন্ধন ও উদ্যোক্তা ঋণ।" },
+      { id: "housing", title: "🏢 বাসস্থান ও আবাসন", desc: "গৃহায়ন ঋণ, প্ল্যান অনুমোদন ও হোল্ডিং ট্যাক্স।" },
+      { id: "edu", title: "🎓 শিক্ষা ও দক্ষতা উন্নয়ন", desc: "ভর্তি, উপবৃত্তি, সনদ সংশোধন ও আইটি ট্রেনিং।" },
+      { id: "health", title: "🩺 চিকিৎসা ও স্বাস্থ্য সেবা", desc: "ডাক্তার সিরিয়াল, অ্যাম্বুলেন্স ও ব্লাড ব্যাংক।" },
+      { id: "legal", title: "⚖️ আইনি ও ডিজিটাল নাগরিক", desc: "এনআইডি, পাসপোর্ট, জন্ম নিবন্ধন ও অনলাইন জিডি।" }
     ];
 
     function App() {
-      // Navigation: 'home' | 'vumi-portal' | 'moulik-detail' | 'track' | 'agents' | 'dashboard'
-      const [activeView, setActiveView] = useState("home");
-      const [moulikList, setMoulikList] = useState(INITIAL_MOULIK_SEBA);
-      const [selectedMoulik, setSelectedMoulik] = useState(INITIAL_MOULIK_SEBA[0]);
-
-      // Vumi Portal Sub-tabs: 'services' | 'apply' | 'calc'
-      const [vumiSubTab, setVumiSubTab] = useState("services");
-      const [selectedVumiService, setSelectedVumiService] = useState(INITIAL_VUMI_SERVICES[0]);
-
-      // Applications & Agents State
-      const [applications, setApplications] = useState([]);
-      const [agents, setAgents] = useState(INITIAL_AGENTS);
-      const [submittedApp, setSubmittedApp] = useState(null);
-
-      // Search & Filter
-      const [homeSearch, setHomeSearch] = useState("");
+      const [view, setView] = useState("home");
+      const [selectedSrv, setSelectedSrv] = useState(VUMI_SERVICES[0].title);
+      const [apps, setApps] = useState([]);
+      const [lastId, setLastId] = useState("");
       const [trackQuery, setTrackQuery] = useState("");
-      const [trackedApp, setTrackedApp] = useState(null);
-      const [trackError, setTrackError] = useState("");
-      const [agentDivision, setAgentDivision] = useState("সকল");
+      const [trackResult, setTrackResult] = useState(null);
+      const [trackMsg, setTrackMsg] = useState("");
 
-      // Land Calculator (Feet + Ana-Gonda)
-      const [lengthFt, setLengthFt] = useState("");
-      const [widthFt, setWidthFt] = useState("");
-      const [totalLandShotok, setTotalLandShotok] = useState("100");
-      const [anaInput, setAnaInput] = useState("4");
+      // Calculator state
+      const [len, setLen] = useState("");
+      const [wid, setWid] = useState("");
 
-      // Admin/Agent Auth & Builder
-      const [currentUser, setCurrentUser] = useState(null);
-      const [authMode, setAuthMode] = useState("login");
-      const [loginPhone, setLoginPhone] = useState("");
-      const [loginPass, setLoginPass] = useState("");
-      const [newSubServiceText, setNewSubServiceText] = useState("");
-      const [targetCardId, setTargetCardId] = useState("food-agri");
+      // Admin auth
+      const [isAdmin, setIsAdmin] = useState(false);
+      const [phone, setPhone] = useState("");
+      const [pass, setPass] = useState("");
 
-      // Load from LocalStorage
       useEffect(() => {
-        const savedApps = localStorage.getItem("esolution_pro_apps");
-        const savedMoulik = localStorage.getItem("esolution_pro_moulik");
-        const savedAgents = localStorage.getItem("esolution_pro_agents");
-        const savedUser = localStorage.getItem("esolution_pro_user");
-
-        if (savedApps) {
-          setApplications(JSON.parse(savedApps));
+        const saved = localStorage.getItem("esolution_apps_v2");
+        if (saved) {
+          setApps(JSON.parse(saved));
         } else {
-          const demoApps = [
-            {
-              trackingId: "ES-2026-1001",
-              category: "ভূমি সেবা",
-              serviceName: "ই-নামজারি (মিউটেশন) আবেদন",
-              applicantName: "মোঃ রফিকুল ইসলাম",
-              mobile: "01711000000",
-              nid: "1990123456789",
-              division: "রংপুর",
-              district: "নীলফামারী",
-              upazila: "সদর",
-              details: "মৌজা: কুন্দপুকুর, খতিয়ান: ৪৫২, দাগ: ১০২৩",
-              paymentMethod: "bKash",
-              trxId: "BK9823471A",
-              totalFee: 1500,
-              status: "Processing",
-              note: "ইউনিয়ন ভূমি অফিস থেকে প্রতিবেদন এসেছে, এসি ল্যান্ড শুনানির জন্য নথি প্রস্তুত।",
-              date: "২৭ অক্টোবর, ২০২৬"
-            },
-            {
-              trackingId: "ES-2026-1002",
-              category: "🎓 শিক্ষা ও দক্ষতা উন্নয়ন সেবা",
-              serviceName: "বোর্ড সনদে (SSC/HSC) নাম ও জন্মতারিখ সংশোধন",
-              applicantName: "সুমাইয়া আক্তার",
-              mobile: "01811223344",
-              nid: "2004987654321",
-              division: "রংপুর",
-              district: "নীলফামারী",
-              upazila: "সৈয়দপুর",
-              details: "দিনাজপুর বোর্ড, এসএসসি রোল: ৩৪৫২১০",
-              paymentMethod: "Nagad",
-              trxId: "NG7721904X",
-              totalFee: 120,
-              status: "Verified",
-              note: "কাগজপত্র যাচাই সম্পন্ন হয়েছে, বোর্ডের নাম ও বয়স সংশোধনের কমিটিতে প্রেরিত।",
-              date: "২৭ অক্টোবর, ২০২৬"
-            }
-          ];
-          setApplications(demoApps);
-          localStorage.setItem("esolution_pro_apps", JSON.stringify(demoApps));
+          const demo = [{
+            trackingId: "ES-2026-1001",
+            name: "মোঃ রফিকুল ইসলাম",
+            mobile: "01711000000",
+            service: "ই-নামজারি (মিউটেশন) আবেদন",
+            status: "Processing",
+            note: "ইউনিয়ন ভূমি অফিসে নথিপত্র যাচাই চলছে।"
+          }];
+          setApps(demo);
+          localStorage.setItem("esolution_apps_v2", JSON.stringify(demo));
         }
-
-        if (savedMoulik) setMoulikList(JSON.parse(savedMoulik));
-        if (savedAgents) setAgents(JSON.parse(savedAgents));
-        if (savedUser) setCurrentUser(JSON.parse(savedUser));
       }, []);
 
       const saveApps = (list) => {
-        setApplications(list);
-        localStorage.setItem("esolution_pro_apps", JSON.stringify(list));
+        setApps(list);
+        localStorage.setItem("esolution_apps_v2", JSON.stringify(list));
       };
 
-      // Universal Application Submit Handler
-      const handleAppSubmit = (e, categoryName, serviceTitle, feeAmount) => {
+      const handleApply = (e) => {
         e.preventDefault();
-        const form = new FormData(e.target);
-        const randomId = `ES-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-
-        const extraDetails = form.get("mouza")
-          ? `মৌজা: ${form.get("mouza")}, খতিয়ান: ${form.get("khatian")}, দাগ: ${form.get("dag")}`
-          : form.get("details");
-
-        const newEntry = {
-          trackingId: randomId,
-          category: categoryName,
-          serviceName: form.get("subServiceSelect") || serviceTitle,
-          applicantName: form.get("applicantName"),
-          mobile: form.get("mobile"),
-          nid: form.get("nid"),
-          division: form.get("division") || "রংপুর",
-          district: form.get("district"),
-          upazila: form.get("upazila"),
-          details: extraDetails,
-          paymentMethod: form.get("paymentMethod") || "bKash",
-          trxId: form.get("trxId") || "CASH-DESK",
-          totalFee: feeAmount,
+        const fd = new FormData(e.target);
+        const id = `ES-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+        const newApp = {
+          trackingId: id,
+          name: fd.get("name"),
+          mobile: fd.get("mobile"),
+          service: selectedSrv,
           status: "Pending",
-          note: "আপনার আবেদন ও পেমেন্ট তথ্য গৃহীত হয়েছে। দায়িত্বপ্রাপ্ত কর্মকর্তা শীঘ্রই কাগজপত্র যাচাই করবেন।",
-          date: new Date().toLocaleDateString("bn-BD")
+          note: "আবেদন সফলভাবে জমা হয়েছে। প্রতিনিধি দ্রুত যোগাযোগ করবেন।"
         };
-
-        const updated = [newEntry, ...applications];
-        saveApps(updated);
-        setSubmittedApp(newEntry);
+        saveApps([newApp, ...apps]);
+        setLastId(id);
         e.target.reset();
-        window.scrollTo({ top: 0, behavior: "smooth" });
       };
 
-      // Live Tracking Handler
-      const handleTrack = (e) => {
+      const handleSearch = (e) => {
         if (e) e.preventDefault();
-        setTrackError("");
+        setTrackMsg("");
         const q = trackQuery.trim().toLowerCase();
-        if (!q) return;
-        const found = applications.find(
-          (a) => a.trackingId.toLowerCase() === q || a.mobile === q
-        );
-        if (found) {
-          setTrackedApp(found);
-        } else {
-          setTrackedApp(null);
-          setTrackError("কোনো আবেদন পাওয়া যায়নি! ডেমো দেখতে লিখুন: ES-2026-1001 অথবা ES-2026-1002");
+        const found = apps.find(a => a.trackingId.toLowerCase() === q || a.mobile === q);
+        if (found) setTrackResult(found);
+        else {
+          setTrackResult(null);
+          setTrackMsg("কোনো আবেদন পাওয়া যায়নি! ডেমো দেখতে লিখুন: ES-2026-1001");
         }
       };
 
-      // Dynamic Service Builder (Allows user to expand services directly)
-      const handleAddSubService = (e) => {
-        e.preventDefault();
-        if (!newSubServiceText.trim()) return;
-        const updated = moulikList.map((card) => {
-          if (card.id === targetCardId) {
-            return { ...card, subServices: [...card.subServices, newSubServiceText.trim()] };
-          }
-          return card;
-        });
-        setMoulikList(updated);
-        localStorage.setItem("esolution_pro_moulik", JSON.stringify(updated));
-        setNewSubServiceText("");
-        alert("নতুন সেবাটি সফলভাবে হোম পেজের কার্ডে যুক্ত হয়েছে!");
-      };
-
-      // Land Calculations
-      const sqFt = (parseFloat(lengthFt) || 0) * (parseFloat(widthFt) || 0);
-      const shotok = (sqFt / 435.6).toFixed(2);
-      const katha = (sqFt / 720).toFixed(2);
-      const bigha = (sqFt / 14400).toFixed(3);
-      const anaShareShotok = (((parseFloat(totalLandShotok) || 0) * (parseFloat(anaInput) || 0)) / 16).toFixed(2);
-
-      // Stepper Helper
-      const getStepNum = (status) => {
-        if (status === "Pending") return 1;
-        if (status === "Verified") return 2;
-        if (status === "Processing") return 3;
-        if (status === "Completed") return 4;
-        return 0;
-      };
+      const sq = (parseFloat(len) || 0) * (parseFloat(wid) || 0);
+      const shotok = (sq / 435.6).toFixed(2);
+      const katha = (sq / 720).toFixed(2);
 
       return (
-        <div className="min-h-screen flex flex-col">
-          {/* TOP OFFICIAL BAR */}
-          <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 no-print border-b border-slate-800">
-            <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-              <div className="flex items-center gap-2">
-                <span className="bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[11px]">LIVE PORTAL</span>
-                <span>🇧🇩 <strong>E-Solution (ই-সলিউশন)</strong> — ১টি বিশেষ ভূমি সেবা + ৬টি মৌলিক সেবা বাতায়ন</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span>ডেমো ট্র্যাকিং: <strong className="text-amber-400 cursor-pointer" onClick={() => { setTrackQuery("ES-2026-1001"); setActiveView("track"); }}>ES-2026-1001</strong></span>
-                <span>হেল্পলাইন: <strong>১৬১২২</strong></span>
-              </div>
-            </div>
-          </div>
-
-          {/* STICKY NAVBAR */}
-          <header className="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-50 shadow-sm no-print">
-            <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-              <div onClick={() => { setActiveView("home"); setSubmittedApp(null); }} className="flex items-center gap-3 cursor-pointer">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center text-2xl font-black shadow-md">
-                  E
-                </div>
+        <div className="min-h-screen flex flex-col text-slate-800">
+          {/* HEADER */}
+          <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+              <div onClick={() => setView("home")} className="cursor-pointer flex items-center gap-2">
+                <div className="w-10 h-10 bg-emerald-700 text-white rounded-xl flex items-center justify-center font-black text-xl">E</div>
                 <div>
-                  <h1 className="text-xl font-extrabold text-slate-900 leading-none">E-Solution</h1>
-                  <p className="text-xs text-emerald-700 font-bold mt-0.5">সহজ সমাধান, সবার জন্য (৭টি সেবা কার্ড)</p>
+                  <h1 className="font-extrabold text-lg leading-none">E-Solution</h1>
+                  <p className="text-[11px] text-emerald-700 font-bold">সহজ সমাধান, সবার জন্য</p>
                 </div>
               </div>
-
-              <nav className="flex flex-wrap items-center gap-1.5 md:gap-2 text-xs md:text-sm font-bold">
-                <button
-                  onClick={() => { setActiveView("home"); setSubmittedApp(null); }}
-                  className={`px-3.5 py-2 rounded-xl transition ${activeView === "home" ? "bg-emerald-700 text-white shadow" : "text-slate-700 hover:bg-slate-100"}`}
-                >
-                  🏠 হোম পেজ (৭টি কার্ড)
-                </button>
-                <button
-                  onClick={() => { setActiveView("vumi-portal"); setVumiSubTab("services"); setSubmittedApp(null); }}
-                  className={`px-3.5 py-2 rounded-xl transition ${activeView === "vumi-portal" ? "bg-emerald-700 text-white shadow" : "text-slate-700 hover:bg-slate-100"}`}
-                >
-                  🏡 ভূমি সেবা পোর্টাল
-                </button>
-                <button
-                  onClick={() => setActiveView("track")}
-                  className={`px-3.5 py-2 rounded-xl transition ${activeView === "track" ? "bg-emerald-700 text-white shadow" : "text-slate-700 hover:bg-slate-100"}`}
-                >
-                  🛰️ লাইভ ট্র্যাকিং
-                </button>
-                <button
-                  onClick={() => setActiveView("agents")}
-                  className={`px-3.5 py-2 rounded-xl transition ${activeView === "agents" ? "bg-emerald-700 text-white shadow" : "text-slate-700 hover:bg-slate-100"}`}
-                >
-                  👨‍💼 ভেরিফাইড এজেন্ট
-                </button>
-                <button
-                  onClick={() => setActiveView("dashboard")}
-                  className="bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl shadow-sm transition"
-                >
-                  {currentUser ? `📊 ড্যাশবোর্ড (${currentUser.role.toUpperCase()})` : "🔐 এজেন্ট / অ্যাডমিন"}
-                </button>
+              <nav className="flex gap-2 text-xs md:text-sm font-bold">
+                <button onClick={() => setView("home")} className={`px-3 py-2 rounded-lg ${view === "home" ? "bg-emerald-700 text-white" : "hover:bg-slate-100"}`}>হোম</button>
+                <button onClick={() => setView("apply")} className={`px-3 py-2 rounded-lg ${view === "apply" ? "bg-emerald-700 text-white" : "hover:bg-slate-100"}`}>আবেদন</button>
+                <button onClick={() => setView("track")} className={`px-3 py-2 rounded-lg ${view === "track" ? "bg-emerald-700 text-white" : "hover:bg-slate-100"}`}>ট্র্যাকিং</button>
+                <button onClick={() => setView("admin")} className="bg-amber-400 px-3 py-2 rounded-lg text-slate-950">অ্যাডমিন</button>
               </nav>
             </div>
           </header>
 
-          {/* ==================== DIGITAL RECEIPT MODAL / BANNER ==================== */}
-          {submittedApp && (
-            <div className="max-w-3xl mx-auto px-4 mt-6 w-full">
-              <div className="bg-white border-2 border-emerald-600 rounded-3xl p-6 md:p-8 shadow-xl print-area">
-                <div className="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
+          {/* MAIN CONTENT */}
+          <main className="flex-1 max-w-7xl w-full mx-auto p-4 py-8">
+            {view === "home" && (
+              <div className="space-y-10">
+                {/* Hero */}
+                <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-8 rounded-3xl shadow-xl grid md:grid-cols-2 gap-6 items-center">
                   <div>
-                    <span className="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full">
-                      ✅ সরকারি ও নাগরিক সেবা ই-রিসিট (Digital Slip)
-                    </span>
-                    <h3 className="text-2xl font-black text-slate-900 mt-2">E-Solution অনলাইন আবেদন স্লিপ</h3>
-                    <p className="text-xs text-slate-500">আবেদনের তারিখ: {submittedApp.date}</p>
+                    <span className="bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full">ডিজিটাল সেবা পোর্টাল</span>
+                    <h2 className="text-3xl font-black mt-3">ভূমি ও মৌলিক নাগরিক সেবা এখন এক ক্লিকে</h2>
+                    <p className="text-xs md:text-sm text-emerald-100 mt-2">ই-নামজারি, পর্চা, খাজনা এবং ৬টি মৌলিক সেবার জন্য ঘরে বসে আবেদন করুন।</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs text-slate-500 block">ট্র্যাকিং আইডি (Tracking ID)</span>
-                    <span className="text-2xl font-black text-emerald-700 tracking-wider">{submittedApp.trackingId}</span>
-                  </div>
-                </div>
-
-                <div className="grid sm:grid-cols-2 gap-3 text-sm bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5">
-                  <p><strong>আবেদনকারীর নাম:</strong> {submittedApp.applicantName}</p>
-                  <p><strong>মোবাইল নম্বর:</strong> {submittedApp.mobile}</p>
-                  <p><strong>এনআইডি/পরিচয়পত্র:</strong> {submittedApp.nid}</p>
-                  <p><strong>সেবার বিভাগ:</strong> {submittedApp.category}</p>
-                  <p className="sm:col-span-2"><strong>নির্বাচিত সেবা:</strong> <span className="text-emerald-800 font-bold">{submittedApp.serviceName}</span></p>
-                  <p><strong>ঠিকানা:</strong> {submittedApp.upazila}, {submittedApp.district} ({submittedApp.division})</p>
-                  <p><strong>পেমেন্ট ও TrxID:</strong> {submittedApp.paymentMethod} ({submittedApp.trxId}) — <strong>৳{submittedApp.totalFee}</strong></p>
-                  <p className="sm:col-span-2"><strong>আবেদনের বিস্তারিত তথ্য:</strong> {submittedApp.details}</p>
-                </div>
-
-                <div className="flex flex-wrap justify-between items-center gap-3 no-print">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => window.print()}
-                      className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl"
-                    >
-                      🖨️ আবেদন স্লিপ প্রিন্ট / PDF সেভ করুন
-                    </button>
-                    <button
-                      onClick={() => {
-                        setTrackQuery(submittedApp.trackingId);
-                        setTrackedApp(submittedApp);
-                        setSubmittedApp(null);
-                        setActiveView("track");
-                      }}
-                      className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl"
-                    >
-                      🛰️ লাইভ স্ট্যাটাস ট্র্যাক করুন →
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => setSubmittedApp(null)}
-                    className="text-xs text-rose-600 font-bold hover:underline"
-                  >
-                    ✕ রিসিট বন্ধ করুন
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ==================== VIEW 1: HOME PAGE (1 VUMI + 6 MOULIK = 7 CARDS) ==================== */}
-          {activeView === "home" && (
-            <main className="flex-1">
-              {/* Hero Banner */}
-              <section className="bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900 text-white py-12 px-4">
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
-                  <div className="lg:col-span-7 space-y-4">
-                    <div className="inline-flex items-center gap-2 bg-emerald-800/90 border border-emerald-500/40 text-amber-300 text-xs font-bold px-3.5 py-1.5 rounded-full">
-                      <span>✨ মোট ৭টি পূর্ণাঙ্গ সেবা কার্ড</span>
-                      <span>•</span>
-                      <span>১টি বিশেষ ভূমি সেবা + ৬টি মৌলিক সেবা</span>
-                    </div>
-                    <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">
-                      প্রয়োজনীয় সকল নাগরিক ও মৌলিক সেবা এখন এক ঠিকানায়
-                    </h2>
-                    <p className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-2xl">
-                      ই-নামজারি, খতিয়ান ও খাজনা থেকে শুরু করে খাদ্য, বস্ত্র, বাসস্থান, শিক্ষা, চিকিৎসা এবং আইনি সহায়তা—যেকোনো কার্ডে ক্লিক করে অনলাইনে আবেদন করুন, ডিজিটাল রিসিট নিন এবং রিয়েল-টাইম ট্র্যাক করুন।
-                    </p>
-
-                    {/* Quick Service Search Filter */}
-                    <div className="pt-2 max-w-xl">
-                      <input
-                        type="text"
-                        value={homeSearch}
-                        onChange={(e) => setHomeSearch(e.target.value)}
-                        placeholder="🔍 যেকোনো সেবা খুঁজুন (যেমন: নামজারি, পাসপোর্ট, উপবৃত্তি, ডাক্তার, কৃষি)..."
-                        className="w-full bg-white/10 backdrop-blur border border-white/25 text-white placeholder-emerald-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:bg-white focus:text-slate-900"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Quick Live Tracking Widget */}
-                  <div className="lg:col-span-5 bg-white text-slate-800 p-6 rounded-3xl shadow-2xl border border-emerald-100">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-extrabold text-lg text-emerald-950">🛰️ তাৎক্ষণিক আবেদন ট্র্যাকিং</h3>
-                      <span className="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">২৪/৭ লাইভ</span>
-                    </div>
-                    <p className="text-xs text-slate-500 mb-4">
-                      আবেদনের ট্র্যাকিং আইডি (যেমন: <code className="font-bold text-emerald-700">ES-2026-1001</code>) অথবা মোবাইল নম্বর দিন:
-                    </p>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleTrack();
-                        setActiveView("track");
-                      }}
-                      className="space-y-3"
-                    >
-                      <input
-                        type="text"
-                        value={trackQuery}
-                        onChange={(e) => setTrackQuery(e.target.value)}
-                        placeholder="ES-2026-1001 বা মোবাইল নম্বর লিখুন..."
-                        className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-emerald-600"
-                        required
-                      />
-                      <button type="submit" className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition">
-                        আবেদনের সর্বশেষ অবস্থা দেখুন →
-                      </button>
+                  <div className="bg-white text-slate-800 p-5 rounded-2xl shadow">
+                    <h3 className="font-bold text-sm mb-2 text-emerald-900">🛰️ দ্রুত আবেদন ট্র্যাকিং</h3>
+                    <form onSubmit={(e) => { e.preventDefault(); handleSearch(); setView("track"); }} className="flex gap-2">
+                      <input type="text" value={trackQuery} onChange={e => setTrackQuery(e.target.value)} placeholder="ট্র্যাকিং আইডি (ES-2026-1001)..." className="flex-1 border rounded-xl px-3 py-2 text-xs" required />
+                      <button type="submit" className="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl">খুঁজুন</button>
                     </form>
-
-                    <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-slate-100 text-center text-xs">
-                      <div className="bg-slate-50 p-2 rounded-xl">
-                        <strong className="text-base text-emerald-700 block">৭টি</strong>
-                        <span className="text-slate-500">মূল সেবা বিভাগ</span>
-                      </div>
-                      <div className="bg-slate-50 p-2 rounded-xl">
-                        <strong className="text-base text-emerald-700 block">৩০+</strong>
-                        <span className="text-slate-500">অনলাইন সার্ভিস</span>
-                      </div>
-                      <div className="bg-slate-50 p-2 rounded-xl">
-                        <strong className="text-base text-emerald-700 block">{applications.length}টি</strong>
-                        <span className="text-slate-500">সক্রিয় আবেদন</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </section>
 
-              <div className="max-w-7xl mx-auto px-4 py-10 space-y-12">
-                {/* ==================== CARD #1: FEATURED VUMI SEBA CARD ==================== */}
-                <section>
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                    <div>
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
-                        স্বতন্ত্র কার্ড নং ১ (Featured Land Portal)
-                      </span>
-                      <h3 className="text-2xl font-extrabold text-slate-900 mt-1">
-                        🏡 বিশেষায়িত ডিজিটাল ভূমি সেবা কার্ড
-                      </h3>
-                    </div>
-                    <button
-                      onClick={() => { setActiveView("vumi-portal"); setVumiSubTab("services"); }}
-                      className="text-xs font-bold text-emerald-700 hover:underline"
-                    >
-                      সকল ভূমি সেবা ও ক্যালকুলেটর দেখুন →
-                    </button>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white rounded-3xl p-6 md:p-8 shadow-xl border-2 border-emerald-400/30">
-                    <div className="grid lg:grid-cols-12 gap-6 items-center">
-                      <div className="lg:col-span-8 space-y-4">
-                        <div className="inline-flex items-center gap-2 bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full">
-                          ⭐ ১০০% প্রস্তুত ও পূর্ণাঙ্গ মডিউল
+                {/* Vumi Seba Cards */}
+                <div>
+                  <h3 className="text-xl font-extrabold text-emerald-950 mb-4">🏡 বিশেষ ভূমি সেবা (কার্ড নং ১)</h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {VUMI_SERVICES.map(s => (
+                      <div key={s.id} className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                          <div className="text-3xl mb-2">{s.icon}</div>
+                          <h4 className="font-bold text-slate-900">{s.title}</h4>
+                          <p className="text-xs text-slate-500 mt-1 mb-3">{s.desc}</p>
                         </div>
-                        <h4 className="text-2xl md:text-3xl font-black">
-                          🏡 ভূমি সেবা (ই-নামজারি, খতিয়ান, খাজনা, মৌজা ম্যাপ ও মিস কেস)
-                        </h4>
-                        <p className="text-emerald-100 text-sm leading-relaxed">
-                          এই কার্ডে ক্লিক করলে জমি সংক্রান্ত ৬টি সরকারি ও নাগরিক সেবা, নির্ধারিত ফি তালিকা, প্রয়োজনীয় কাগজপত্রের চেকলিস্ট, জমির পরিমাপ (শতক/কাঠা/আনা-গণ্ডা) ক্যালকুলেটর এবং সরাসরি অনলাইন আবেদন ফর্ম পাওয়া যাবে।
-                        </p>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 text-xs">
-                          {INITIAL_VUMI_SERVICES.map((vs) => (
-                            <div
-                              key={vs.id}
-                              onClick={() => {
-                                setSelectedVumiService(vs);
-                                setActiveView("vumi-portal");
-                                setVumiSubTab("apply");
-                                window.scrollTo(0, 0);
-                              }}
-                              className="bg-white/10 hover:bg-white/20 border border-white/15 p-2.5 rounded-xl cursor-pointer transition flex items-center gap-2"
-                            >
-                              <span className="text-lg">{vs.icon}</span>
-                              <div>
-                                <div className="font-bold leading-tight">{vs.title}</div>
-                                <div className="text-[11px] text-amber-300">মোট ফি: ৳{vs.govtFee + vs.serviceFee}</div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                        <button onClick={() => { setSelectedSrv(s.title); setView("apply"); }} className="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2 rounded-xl">আবেদন করুন →</button>
                       </div>
-
-                      <div className="lg:col-span-4 bg-white/10 backdrop-blur p-5 rounded-2xl border border-white/20 space-y-3">
-                        <button
-                          onClick={() => {
-                            setActiveView("vumi-portal");
-                            setVumiSubTab("services");
-                            window.scrollTo(0, 0);
-                          }}
-                          className="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3.5 px-4 rounded-xl shadow-lg transition text-sm"
-                        >
-                          📂 ভূমি সেবার বিস্তারিত পেজ খুলুন →
-                        </button>
-                        <button
-                          onClick={() => {
-                            setActiveView("vumi-portal");
-                            setVumiSubTab("apply");
-                            window.scrollTo(0, 0);
-                          }}
-                          className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl transition text-xs"
-                        >
-                          📝 সরাসরি ভূমি সেবার আবেদন করুন
-                        </button>
-                        <button
-                          onClick={() => {
-                            setActiveView("vumi-portal");
-                            setVumiSubTab("calc");
-                            window.scrollTo(0, 0);
-                          }}
-                          className="w-full bg-white/15 hover:bg-white/25 text-white font-bold py-2.5 px-4 rounded-xl transition text-xs"
-                        >
-                          📐 জমির মাপ ও আনা-গণ্ডা ক্যালকুলেটর
-                        </button>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                </section>
+                </div>
 
-                {/* ==================== CARDS #2 TO #7: 6 MOULIK SEBA CARDS ==================== */}
-                <section>
-                  <div className="flex flex-wrap justify-between items-end gap-2 mb-6">
-                    <div>
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
-                        কার্ড নং ২ থেকে ৭ (Six Fundamental Human Needs)
-                      </span>
-                      <h3 className="text-2xl font-extrabold text-slate-900 mt-1">
-                        🌟 মানুষের ৬টি মৌলিক সেবার আলাদা কার্ড
-                      </h3>
-                      <p className="text-xs md:text-sm text-slate-600">
-                        প্রতিটি কার্ডে ক্লিক করলে সেই মৌলিক সেবার বিস্তারিত পেজ, প্রয়োজনীয় কাগজপত্র, কাস্টমাইজড অনলাইন আবেদন ফর্ম এবং ডেভেলপার গাইড খুলবে।
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {moulikList
-                      .filter(
-                        (item) =>
-                          !homeSearch ||
-                          item.title.toLowerCase().includes(homeSearch.toLowerCase()) ||
-                          item.subtitle.toLowerCase().includes(homeSearch.toLowerCase()) ||
-                          item.subServices.some((s) => s.toLowerCase().includes(homeSearch.toLowerCase()))
-                      )
-                      .map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() => {
-                            setSelectedMoulik(item);
-                            setSubmittedApp(null);
-                            setActiveView("moulik-detail");
-                            window.scrollTo(0, 0);
-                          }}
-                          className="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl border border-slate-200/90 transition cursor-pointer flex flex-col justify-between group"
-                        >
-                          <div>
-                            <div className="flex justify-between items-center mb-4">
-                              <span className="text-4xl bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                                {item.icon}
-                              </span>
-                              <div className="text-right">
-                                <span className={`text-xs font-extrabold px-3 py-1 rounded-full ${item.badgeColor}`}>
-                                  {item.number}
-                                </span>
-                                <span className="block text-[11px] text-slate-400 mt-1">
-                                  সেবা ফি: ৳{item.fee} • {item.time}
-                                </span>
-                              </div>
-                            </div>
-
-                            <h4 className="text-xl font-extrabold text-slate-900 group-hover:text-emerald-700 transition">
-                              {item.title}
-                            </h4>
-                            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
-                              {item.subtitle}
-                            </p>
-
-                            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 mb-5">
-                              <span className="text-[11px] font-bold text-slate-400 uppercase block mb-2">
-                                অন্তর্ভুক্ত সেবাসমূহ ({item.subServices.length}টি):
-                              </span>
-                              <ul className="space-y-1.5 text-xs text-slate-700">
-                                {item.subServices.map((sub, i) => (
-                                  <li key={i} className="flex items-start gap-1.5">
-                                    <span className="text-emerald-600 font-bold">✔</span>
-                                    <span>{sub}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-
-                          <button className="w-full bg-slate-900 group-hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2">
-                            <span>বিস্তারিত দেখুন ও আবেদন করুন</span>
-                            <span>→</span>
-                          </button>
+                {/* 6 Moulik Seba Cards */}
+                <div>
+                  <h3 className="text-xl font-extrabold text-slate-950 mb-4">🌟 মানুষের ৬টি মৌলিক সেবা (কার্ড নং ২ থেকে ৭)</h3>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {MOULIK_SERVICES.map(m => (
+                      <div key={m.id} className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-base">{m.title}</h4>
+                          <p className="text-xs text-slate-500 mt-1 mb-4">{m.desc}</p>
                         </div>
-                      ))}
+                        <button onClick={() => { setSelectedSrv(m.title); setView("apply"); }} className="w-full bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl transition">সেবা বিস্তারিত ও আবেদন →</button>
+                      </div>
+                    ))}
                   </div>
-                </section>
+                </div>
+
+                {/* Calculator Box */}
+                <div className="bg-white p-6 rounded-2xl border shadow-sm">
+                  <h3 className="text-lg font-bold text-emerald-950 mb-2">📐 জমির পরিমাপ ক্যালকুলেটর (শতক ও কাঠা)</h3>
+                  <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                    <input type="number" value={len} onChange={e => setLen(e.target.value)} placeholder="দৈর্ঘ্য (ফুট)" className="border rounded-xl px-3 py-2 text-xs" />
+                    <input type="number" value={wid} onChange={e => setWid(e.target.value)} placeholder="প্রস্থ (ফুট)" className="border rounded-xl px-3 py-2 text-xs" />
+                  </div>
+                  <div className="bg-emerald-900 text-white p-4 rounded-xl grid grid-cols-3 text-center text-xs">
+                    <div>বর্গফুট: <strong>{sq.toFixed(1)}</strong></div>
+                    <div>শতক: <strong className="text-amber-300">{shotok}</strong></div>
+                    <div>কাঠা: <strong className="text-emerald-300">{katha}</strong></div>
+                  </div>
+                </div>
               </div>
-            </main>
-          )}
+            )}
 
-          {/* ==================== VIEW 2: FULL VUMI SEBA PORTAL (CARD #1 DETAIL) ==================== */}
-          {activeView === "vumi-portal" && (
-            <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-6">
-              <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-6 md
+            {view === "apply" && (
+              <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl border shadow-sm">
+                <h3 className="text-xl font-extrabold text-emerald-900 mb-2">📝 অনলাইন আবেদন ফরম</h3>
+                {lastId && (
+                  <div className="mb-4 bg-emerald-50 border p-3 rounded-xl text-center text-xs">
+                    ✅ সফল! আপনার ট্র্যাকিং আইডি: <strong className="text-emerald-800 text-sm">{lastId}</strong>
+                  </div>
+                )}
+                <form onSubmit={handleApply} className="space-y-3 text-xs">
+                  <div>
+                    <label className="font-bold block mb-1">সেবার নাম:</label>
+                    <input type="text" value={selectedSrv} readOnly className="w-full border rounded-xl px-3 py-2 bg-slate-100 font-bold" />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">আপনার নাম *</label>
+                    <input name="name" required placeholder="পূর্ণ নাম" className="w-full border rounded-xl px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">মোবাইল নম্বর *</label>
+                    <input name="mobile" required placeholder="017XXXXXXXX" className="w-full border rounded-xl px-3 py-2" />
+                  </div>
+                  <button type="submit" className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl">আবেদন জমা দিন</button>
+                </form>
+              </div>
+            )}
+
+            {view === "track" && (
+              <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl border shadow-sm space-y-4">
+                <h3 className="text-xl font-extrabold text-emerald-900">🛰️ লাইভ আবেদন ট্র্যাকিং</h3>
+                <form onSubmit={handleSearch} className="flex gap-2">
+                  <input type="text" value={trackQuery} onChange={e => setTrackQuery(e.target.value)} placeholder="ট্র্যাকিং আইডি বা মোবাইল নম্বর..." className="flex-1 border rounded-xl px-3 py-2 text-xs" />
+                  <button type="submit" className="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl">খুঁজুন</button>
+                </form>
+                {trackMsg && <p className="text-rose-600 text-xs font-bold">{trackMsg}</p>}
+                {trackResult && (
+                  <div className="bg-emerald-50 border p-4 rounded-xl text-xs space-y-2">
+                    <div><strong>ট্র্যাকিং আইডি:</strong> {trackResult.trackingId}</div>
+                    <div><strong>সেবা:</strong> {trackResult.service}</div>
+                    <div><strong>আবেদনকারী:</strong> {trackResult.name} ({trackResult.mobile})</div>
+                    <div><strong>বর্তমান স্ট্যাটাস:</strong> <span className="bg-amber-400 px-2 py-0.5 rounded font-bold">{trackResult.status}</span></div>
+                    <div><strong>অফিসিয়াল নোট:</strong> {trackResult.note}</div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {view === "admin" && (
+              <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl border shadow-sm">
+                {!isAdmin ? (
+                  <div className="max-w-sm mx-auto space-y-3 text-xs">
+                    <h3 className="font-bold text-sm text-emerald-900">অ্যাডমিন লগইন (ডেমো: 01700000000 / admin)</h3>
+                    <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="ফোন নম্বর" className="w-full border rounded-xl px-3 py-2" />
+                    <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="পাসওয়ার্ড" className="w-full border rounded-xl px-3 py-2" />
+                    <button onClick={() => { if(phone==="01700000000" && pass==="admin") setIsAdmin(true); else alert("ভুল তথ্য!"); }} className="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl">লগইন</button>
+                  </div>
+                ) : (
+                  <div className="space-y-4 text-xs">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-bold text-sm">সকল আবেদন নিয়ন্ত্রণ ({apps.length}টি)</h3>
+                      <button onClick={() => setIsAdmin(false)} className="text-rose-600 font-bold">লগআউট</button>
+                    </div>
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-100 border-b">
+                          <th className="p-2">আইডি</th>
+                          <th className="p-2">গ্রাহক</th>
+                          <th className="p-2">সেবা</th>
+                          <th className="p-2">স্ট্যাটাস</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {apps.map(a => (
+                          <tr key={a.trackingId} className="border-b">
+                            <td className="p-2 font-bold text-emerald-800">{a.trackingId}</td>
+                            <td className="p-2">{a.name} ({a.mobile})</td>
+                            <td className="p-2">{a.service}</td>
+                            <td className="p-2">
+                              <select value={a.status} onChange={e => {
+                                const upd = apps.map(x => x.trackingId === a.trackingId ? {...x, status: e.target.value} : x);
+                                saveApps(upd);
+                              }} className="border rounded px-1 py-0.5 font-bold">
+                                <option value="Pending">Pending</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Completed">Completed</option>
+                              </select>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+          </main>
+
+          <footer className="bg-slate-900 text-slate-400 text-xs py-6 text-center mt-12">
+            © ২০২৬ E-Solution | সমস্ত অধিকার সংরক্ষিত।
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
