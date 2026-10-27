@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Solution — সহজ সমাধান, সবার জন্য</title>
+<meta name="description" content="ভূমি ও মৌলিক নাগরিক সেবা এখন এক ক্লিকে। ই-নামজারি, পর্চা, খাজনাসহ ৭টি সেবার তথ্য ও আবেদন-সহায়তা।">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-root="">
+<a class="skip" href="#main">মূল কনটেন্টে যান</a>
+<div id="site-header"></div>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">ডিজিটাল সেবা পোর্টাল</span>
+      <h1>ভূমি ও মৌলিক নাগরিক সেবা<br>এখন এক ক্লিকে</h1>
+      <p>ই-নামজারি, পর্চা, খাজনা এবং ৭টি মৌলিক সেবার জন্য ঘরে বসে আবেদন করুন।</p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 560 260">
+        <defs><linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc86a"/><stop offset="1" stop-color="#3f9e4d"/></linearGradient></defs>
+        <ellipse cx="90" cy="70" rx="70" ry="18" fill="#fff" opacity=".7"/><ellipse cx="150" cy="60" rx="50" ry="14" fill="#fff" opacity=".7"/>
+        <path d="M0 200 Q120 120 260 190 T560 170 V260 H0Z" fill="url(#hill)"/>
+        <path d="M0 230 Q150 180 300 225 T560 215 V260 H0Z" fill="#2f8a43"/>
+        <path d="M230 260 Q250 215 300 200" stroke="#e8d9a8" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <rect x="190" y="150" width="86" height="48" fill="#f6ead2"/><path d="M180 152 L233 108 L286 152Z" fill="#c8532f"/>
+        <rect x="222" y="170" width="20" height="28" fill="#8a5a2b"/><rect x="198" y="164" width="16" height="14" fill="#7fc4e8"/><rect x="252" y="164" width="16" height="14" fill="#7fc4e8"/>
+        <path d="M290 40a16 16 0 0 1 32 0c0 14-16 32-16 32s-16-18-16-32Z" fill="#1aa3b8"/><circle cx="306" cy="40" r="6" fill="#fff"/>
+        <g transform="translate(400 20)"><rect width="120" height="230" rx="18" fill="#1b3d5e"/><rect x="8" y="14" width="104" height="202" rx="10" fill="#eaf6ef"/>
+          <circle cx="60" cy="70" r="24" fill="#138743"/><path d="M48 70l9 9 16-18" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#138743"><rect x="26" y="116" width="68" height="8" rx="4" opacity=".55"/><rect x="26" y="136" width="68" height="8" rx="4" opacity=".55"/><rect x="26" y="156" width="68" height="8" rx="4" opacity=".55"/></g></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="wrap" id="tracking">
+  <form class="track" id="trackForm" novalidate>
+    <span class="track-icon" aria-hidden="true">🛰️</span>
+    <div><h2>দ্রুত আবেদন ট্র্যাকিং</h2><small>ট্র্যাকিং আইডি (ES-2026-1001)...</small></div>
+    <input id="trackId" type="text" placeholder="ট্র্যাকিং আইডি লিখুন" aria-label="ট্র্যাকিং আইডি" autocomplete="off">
+    <button class="btn" type="submit">🔍 খুঁজুন</button>
+  </form>
+  <div class="track-out"><div id="trackMsg" class="toast" role="status" hidden></div><div id="trackOut"></div></div>
+</div>
+
+<section class="section wrap" id="services">
+  <div class="section-head"><h2>আমাদের সেবা সমূহ</h2><p>একটি প্ল্যাটফর্ম ৭টি সেবা – আপনার প্রয়োজন, আমাদের দায়িত্ব</p></div>
+  <div class="services" id="serviceGrid"></div>
+
+  <div class="features" aria-label="আমাদের সুবিধা">
+    <div class="feature"><span class="feature-icon" aria-hidden="true">🛡️</span><div><strong>নিরাপদ ও নির্ভরযোগ্য</strong><small>আপনার তথ্য আমাদের কাছে সম্পূর্ণ নিরাপদ</small></div></div>
+    <div class="feature"><span class="feature-icon" aria-hidden="true">⚡</span><div><strong>দ্রুত সেবা</strong><small>অনলাইনে সহজ আবেদন করুন</small></div></div>
+    <div class="feature"><span class="feature-icon" aria-hidden="true">📱</span><div><strong>মোবাইল-ফ্রেন্ডলি</strong><small>যেকোনো ডিভাইস থেকে ব্যবহার করুন</small></div></div>
+    <div class="feature"><span class="feature-icon" aria-hidden="true">🎧</span><div><strong>সহায়তা ২৪/৭</strong><small>ফোন, হোয়াটসঅ্যাপ ও অনলাইন সাপোর্ট</small></div></div>
+  </div>
+
+  <div class="how-grid">
+    <div class="how">
+      <h2>কিভাবে আবেদন করবেন?</h2>
+      <p>মাত্র ৪টি ধাপে সহজেই সেবা নিন</p>
+      <ol class="steps" id="steps"></ol>
+    </div>
+    <aside class="help" aria-label="সহায়তা">
+      <h3>আপনার কোনো প্রশ্ন আছে?</h3>
+      <p>আমাদের সহায়তা সেবা আপনার পাশে রয়েছে।</p>
+      <a class="btn" id="whatsappBtn" href="contact.html">💬 WhatsApp-এ কথা বলুন</a>
+      <div class="hotline"><span aria-hidden="true">📞</span><div>হটলাইন: <span id="hotline"></span><small id="hotlineHours"></small></div></div>
+    </aside>
+  </div>
+
+  <div class="bottom">
+    <section class="panel green"><h3>📢 সাম্প্রতিক আপডেট</h3><ul class="updates" id="updates"></ul><a class="more" href="contact.html">সব আপডেট দেখুন →</a></section>
+    <section class="panel blue"><h3>🔗 দ্রুত লিংক</h3>
+      <div class="quick">
+        <a href="#tracking"><i aria-hidden="true">🛰️</i><span><b>আবেদন ট্র্যাকিং</b><small>আবেদনের অবস্থা দেখুন</small></span></a>
+        <a href="services/land.html"><i aria-hidden="true">📄</i><span><b>কাগজপত্রের তালিকা</b><small>সেবাভেদে প্রয়োজনীয় কাগজ</small></span></a>
+        <a href="page.html?p=faq"><i aria-hidden="true">❓</i><span><b>সাধারণ প্রশ্নোত্তর</b><small>প্রশ্নের উত্তর জানুন</small></span></a>
+        <a href="apply.html"><i aria-hidden="true">🧾</i><span><b>ফি ও খরচের তথ্য</b><small>কত খরচ লাগবে জানুন</small></span></a>
+        <a href="contact.html"><i aria-hidden="true">☎️</i><span><b>যোগাযোগ</b><small>আমাদের সাথে যোগাযোগ</small></span></a>
+        <a href="page.html?p=terms"><i aria-hidden="true">⬇️</i><span><b>ডাউনলোড</b><small>গাইডলাইন ও ফরম</small></span></a>
+      </div>
+    </section>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
