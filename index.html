@@ -1,314 +1,216 @@
-<!DOCTYPE html>
+from pathlib import Path
+import zipfile
+
+out = Path("/mnt/data/e-solution-homepage")
+out.mkdir(exist_ok=True)
+
+html = r'''<!doctype html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E-Solution | ডিজিটাল নাগরিক ও ভূমি সেবা বাতায়ন</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- React & ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel Standalone -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>
-    body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Solution — সহজ সমাধান, সবার জন্য</title>
+<style>
+:root{--navy:#123b68;--green:#138743;--blue:#087fc4;--ink:#19324c;--muted:#64748b;--line:#e3edf3;--bg:#f5fafb}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.65}
+a{color:inherit;text-decoration:none}.wrap{width:min(1160px,92%);margin:auto}
+header{position:sticky;top:0;z-index:5;background:#ffffffed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:72px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);font-size:1.3rem}.logo{width:42px;height:42px;border-radius:14px;background:#e3f5e9;display:grid;place-items:center;font-size:25px}
+nav{display:flex;gap:24px;align-items:center;font-size:.95rem}nav a:hover{color:var(--green)}.navbtn{padding:9px 16px;border:1px solid #b8d9c5;border-radius:10px}
+.hero{background:linear-gradient(115deg,#e7f7f2,#e8f5ff);padding:48px 0 28px;overflow:hidden}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:25px;align-items:center}
+.kicker{display:inline-block;background:#d4f0dc;color:#176d3b;padding:4px 12px;border-radius:999px;font-size:.88rem;font-weight:700}
+h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.25;color:var(--navy);margin:14px 0}.hero p{font-size:1.08rem;max-width:620px;color:#38536c}
+.hero-art{min-height:210px;display:grid;place-items:center;font-size:clamp(6rem,13vw,10rem);background:radial-gradient(ellipse,#c8eddf 0%,#e4f5ff 65%,transparent 66%);border-radius:30px}
+.searchbox{margin-top:25px;padding:16px;background:white;border:1px solid #e0ecee;border-radius:18px;display:grid;grid-template-columns:1fr auto;gap:10px;box-shadow:0 8px 30px #123b680b}
+input,select{font:inherit;border:1px solid #d4e0e8;border-radius:10px;padding:12px 14px;min-width:0;width:100%;background:white}button,.btn{font:inherit;border:0;border-radius:10px;padding:11px 18px;background:var(--green);color:white;cursor:pointer;font-weight:700;display:inline-flex;justify-content:center;align-items:center;gap:7px}button:hover,.btn:hover{filter:brightness(.94)}.btn.secondary{background:#e8f3ff;color:#155a91}.btn.outline{background:white;color:var(--green);border:1px solid #b8d9c5}
+.section{padding:46px 0}.section-head{text-align:center;margin-bottom:25px}.section-head h2{color:var(--navy);font-size:clamp(1.5rem,3vw,2rem);margin:0}.section-head p{color:var(--muted);margin:7px 0 0}
+.services{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.service-card{--accent:#168548;--tint:#f0faf3;border:1px solid color-mix(in srgb,var(--accent),white 72%);background:linear-gradient(145deg,var(--tint),white);border-radius:18px;padding:23px 19px;display:flex;flex-direction:column;min-height:265px;transition:transform .18s,box-shadow .18s}.service-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #173c5710}.service-icon{width:62px;height:62px;border-radius:50%;background:color-mix(in srgb,var(--accent),white 85%);display:grid;place-items:center;font-size:31px;margin-bottom:13px}.service-card h3{font-size:1.12rem;margin:0 0 8px;color:var(--accent)}.service-card p{margin:0 0 18px;color:#506176;font-size:.93rem;flex:1}.service-actions{display:flex;gap:8px;flex-wrap:wrap}.service-actions .btn{flex:1;font-size:.88rem;padding:9px 10px}.service-actions .btn.secondary{background:white;border:1px solid color-mix(in srgb,var(--accent),white 68%);color:var(--accent)}
+.features{background:#f0f9f3;border-radius:18px;padding:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.feature{display:flex;gap:10px;align-items:center;padding:7px}.feature-icon{font-size:24px;background:white;border-radius:50%;width:45px;height:45px;display:grid;place-items:center;flex-shrink:0}.feature strong{display:block;color:#176d3b}.feature small{color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.step{padding:18px;border:1px solid var(--line);border-radius:16px;background:#fff}.step b{display:block;color:var(--navy);margin:6px 0}.step-num{width:36px;height:36px;border-radius:50%;background:#e7f2ff;color:#1760a0;display:grid;place-items:center;font-weight:800}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{padding:22px;border-radius:18px;background:#f2f8ff;border:1px solid #e1edf8}.panel h3{margin-top:0;color:var(--navy)}.quicklinks{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.quicklinks a{padding:11px;background:white;border-radius:10px;border:1px solid var(--line)}
+footer{background:#102f50;color:#e7f0f9;padding:30px 0 18px;margin-top:24px}.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-links{display:flex;gap:14px;flex-wrap:wrap;color:#c9d8e8;font-size:.9rem}.copyright{border-top:1px solid #ffffff20;margin-top:20px;padding-top:15px;text-align:center;color:#c9d8e8;font-size:.85rem}
+.notice{font-size:.86rem;color:#617386;margin-top:12px}.toast{margin-top:12px;padding:10px 12px;border-radius:10px;background:#fff8df;color:#795a00;display:none}
+@media(max-width:900px){.services{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-grid{grid-template-columns:1fr .65fr}.features{grid-template-columns:repeat(2,1fr)}nav{gap:12px}}
+@media(max-width:620px){.nav{padding:12px 0;align-items:flex-start;flex-direction:column}.nav nav{width:100%;overflow-x:auto;padding-bottom:4px}.hero{padding-top:30px}.hero-grid{grid-template-columns:1fr}.hero-art{min-height:115px;font-size:5rem}.searchbox{grid-template-columns:1fr}.services,.features,.steps,.bottom-grid{grid-template-columns:1fr}.service-card{min-height:0}.section{padding:34px 0}.quicklinks{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
-  <div id="root"></div>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#home"><span class="logo">🌱</span><span>E-Solution<small style="display:block;font-size:.68rem;font-weight:500;color:#60778a">সহজ সমাধান, সবার জন্য</small></span></a>
+    <nav aria-label="প্রধান নেভিগেশন">
+      <a href="#home">⌂ হোম</a><a href="#services">▣ সেবাসমূহ</a><a href="#tracking">◷ ট্র্যাকিং</a><a href="#help">☏ সহায়তা</a><a class="navbtn" href="#services">সেবা খুঁজুন</a>
+    </nav>
+  </div>
+</header>
+<main id="home">
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div><span class="kicker">ডিজিটাল সেবা পোর্টাল</span><h1>ভূমি ও নাগরিক সেবা<br>এখন আরও সহজ</h1><p>ভূমি, কৃষি, ব্যবসা, বাড়ি, শিক্ষা, স্বাস্থ্য ও নাগরিক সেবা—আপনার প্রয়োজনীয় তথ্য ও আবেদন-সহায়তা এক জায়গায়।</p></div>
+      <div class="hero-art" aria-hidden="true">🏡📱</div>
+    </div>
+    <form class="searchbox" id="searchForm"><input id="serviceSearch" type="search" placeholder="কোন সেবা খুঁজছেন? যেমন: নামজারি, উপবৃত্তি, জন্ম নিবন্ধন" aria-label="সেবা খুঁজুন"><button type="submit">⌕ সেবা খুঁজুন</button></form>
+    <div class="toast" id="searchMessage" role="status"></div>
+  </div>
+</section>
 
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head"><h2>আমাদের ৭টি সেবা</h2><p>আপনার প্রয়োজন অনুযায়ী সেবা নির্বাচন করুন</p></div>
+    <div class="services" id="serviceGrid">
+      <article class="service-card" style="--accent:#168548;--tint:#f0faf3" data-keywords="ভূমি জমি নামজারি মিউটেশন খাজনা পর্চা খতিয়ান মৌজা ম্যাপ দলিল">
+        <div class="service-icon">🌿</div><h3>ভূমি সেবা</h3><p>ই-নামজারি, খাজনা, খতিয়ান-পর্চা, মৌজা ম্যাপ ও দলিলের নকল সম্পর্কে তথ্য ও আবেদন-সহায়তা।</p>
+        <div class="service-actions"><a class="btn" href="services/land.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=land">আবেদন</a></div>
+      </article>
+      <article class="service-card" style="--accent:#087fc4;--tint:#eff9ff" data-keywords="কৃষি খাদ্য কৃষক সার বীজ ভর্তুকি টিসিবি সরকারি সহায়তা">
+        <div class="service-icon">🌾</div><h3>কৃষি ও সরকারি সহায়তা</h3><p>কৃষি তথ্য, সার-বীজ সহায়তা, প্রযোজ্য ভর্তুকি ও সরকারি সহায়তা কর্মসূচির তথ্য।</p>
+        <div class="service-actions"><a class="btn" href="services/agriculture.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=agriculture">আবেদন</a></div>
+      </article>
+      <article class="service-card" style="--accent:#c05a18;--tint:#fff7ed" data-keywords="ব্যবসা উদ্যোক্তা বিসিক ট্রেড লাইসেন্স প্রশিক্ষণ ঋণ কুটির শিল্প">
+        <div class="service-icon">🏪</div><h3>ব্যবসা ও উদ্যোক্তা</h3><p>ব্যবসা শুরু, নিবন্ধন-সংক্রান্ত নির্দেশনা, প্রশিক্ষণ ও উদ্যোক্তা সহায়তার তথ্য।</p>
+        <div class="service-actions"><a class="btn" href="services/business.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=business">আবেদন</a></div>
+      </article>
+      <article class="service-card" style="--accent:#7540b5;--tint:#f7f2ff" data-keywords="বাড়ি বাসস্থান আবাসন হোল্ডিং ট্যাক্স বাড়ির প্ল্যান সম্পত্তি">
+        <div class="service-icon">🏠</div><h3>বাড়ি ও সম্পত্তি</h3><p>হোল্ডিং কর, আবাসন প্রকল্প, বাড়ির নকশা অনুমোদন ও সম্পত্তি-সংক্রান্ত তথ্য।</p>
+        <div class="service-actions"><a class="btn" href="services/housing.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=housing">আবেদন</a></div>
+      </article>
+      <article class="service-card" style="--accent:#d62f78;--tint:#fff2f7" data-keywords="শিক্ষা প্রশিক্ষণ ভর্তি উপবৃত্তি সনদ সংশোধন আইটি ট্রেনিং">
+        <div class="service-icon">🎓</div><h3>শিক্ষা ও প্রশিক্ষণ</h3><p>ভর্তি, উপবৃত্তি, সনদ সংশোধন এবং দক্ষতা ও আইটি প্রশিক্ষণের তথ্য।</p>
+        <div class="service-actions"><a class="btn" href="services/education.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=education">আবেদন</a></div>
+      </article>
+      <article class="service-card" style="--accent:#079b8b;--tint:#edfbf8" data-keywords="স্বাস্থ্য চিকিৎসা ডাক্তার হাসপাতাল অ্যাম্বুলেন্স রক্ত জরুরি">
+        <div class="service-icon">🩺</div><h3>স্বাস্থ্য ও জরুরি সহায়তা</h3><p>হাসপাতাল ও চিকিৎসা-তথ্য, অ্যাম্বুলেন্স যোগাযোগ এবং রক্তদাতা খোঁজার সহায়তা।</p>
+        <div class="service-actions"><a class="btn" href="services/health.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=health">আবেদন</a></div>
+      </article>
+      <article class="service-card" style="--accent:#2864c7;--tint:#f0f5ff" data-keywords="নাগরিক কাগজপত্র আইন এনআইডি NID পাসপোর্ট জন্ম নিবন্ধন জিডি">
+        <div class="service-icon">🪪</div><h3>নাগরিক কাগজপত্র ও আইন</h3><p>NID, পাসপোর্ট, জন্ম নিবন্ধন, অনলাইন জিডি ও প্রয়োজনীয় নাগরিক প্রক্রিয়ার নির্দেশনা।</p>
+        <div class="service-actions"><a class="btn" href="services/citizen.html">সেবা দেখুন →</a><a class="btn secondary" href="apply.html?service=citizen">আবেদন</a></div>
+      </article>
+    </div>
+    <p class="notice">নোট: সেবা ও আবেদন-সহায়তার প্রাপ্যতা যাচাই করে প্রকাশ করুন। E-Solution একটি বেসরকারি সহায়তা পোর্টাল; সরকারি অনুমোদন ছাড়া একে সরকারি ওয়েবসাইট হিসেবে উপস্থাপন করা যাবে না।</p>
+  </div>
+</section>
 
-    const VUMI_SERVICES = [
-      { id: "mutation", title: "ই-নামজারি (মিউটেশন) আবেদন", fee: 1500, time: "২৮ দিন", icon: "📝", desc: "জমির মালিকানা পরিবর্তন ও নতুন খতিয়ান তৈরি।" },
-      { id: "ldtax", title: "ভূমি উন্নয়ন কর (খাজনা) প্রদান", fee: 150, time: "২ দিন", icon: "💳", desc: "অনলাইনে খাজনা পরিশোধ ও দাখিলা সংগ্রহ।" },
-      { id: "eporcha", title: "খতিয়ান ও পর্চা (CS/SA/RS)", fee: 200, time: "৫ দিন", icon: "📜", desc: "অনলাইন কপি বা সার্টিফাইড পর্চা উত্তোলন।" },
-      { id: "mouzamap", title: "মৌজা ম্যাপ (নকশা) সংগ্রহ", fee: 700, time: "৭ দিন", icon: "🗺️", desc: "দাগ অনুযায়ী সরকারি মৌজা ম্যাপ সংগ্রহ।" },
-      { id: "misccase", title: "মিস কেস ও খতিয়ান সংশোধন", fee: 1000, time: "৩০ দিন", icon: "⚖️", desc: "খতিয়ানে নামের বানান বা ভুল সংশোধনের আবেদন।" },
-      { id: "deedcheck", title: "দলিল তল্লাশি ও সার্টিফাইড কপি", fee: 700, time: "১০ দিন", icon: "🔍", desc: "সাব-রেজিস্ট্রি অফিস থেকে দলিলের নকল উত্তোলন।" }
-    ];
+<section class="section" style="background:#f8fbfc" id="tracking">
+  <div class="wrap">
+    <div class="section-head"><h2>আবেদনের অবস্থা জানুন</h2><p>আপনার ট্র্যাকিং আইডি লিখে আবেদনের অগ্রগতি দেখুন</p></div>
+    <form class="searchbox" id="trackingForm"><input id="trackingId" placeholder="যেমন: ES-2026-1001" aria-label="ট্র্যাকিং আইডি" required><button type="submit">ট্র্যাকিং খুঁজুন</button></form>
+    <div class="toast" id="trackingMessage" role="status"></div>
+    <p class="notice" style="text-align:center">এই নমুনা পেজে ট্র্যাকিং ফর্মটি ডেমো। বাস্তব আবেদন-তথ্য দেখাতে নিরাপদ সার্ভার ও ডেটাবেস যুক্ত করতে হবে।</p>
+  </div>
+</section>
 
-    const MOULIK_SERVICES = [
-      { id: "food", title: "🌾 খাদ্য ও কৃষি সেবা", desc: "কৃষক কার্ড, সার-বীজ ভর্তুকি ও টিসিবি সহায়তা।" },
-      { id: "textile", title: "👕 বস্ত্র ও কুটির শিল্প", desc: "তাঁত বোর্ড, বিসিক নিবন্ধন ও উদ্যোক্তা ঋণ।" },
-      { id: "housing", title: "🏢 বাসস্থান ও আবাসন", desc: "গৃহায়ন ঋণ, প্ল্যান অনুমোদন ও হোল্ডিং ট্যাক্স।" },
-      { id: "edu", title: "🎓 শিক্ষা ও দক্ষতা উন্নয়ন", desc: "ভর্তি, উপবৃত্তি, সনদ সংশোধন ও আইটি ট্রেনিং।" },
-      { id: "health", title: "🩺 চিকিৎসা ও স্বাস্থ্য সেবা", desc: "ডাক্তার সিরিয়াল, অ্যাম্বুলেন্স ও ব্লাড ব্যাংক।" },
-      { id: "legal", title: "⚖️ আইনি ও ডিজিটাল নাগরিক", desc: "এনআইডি, পাসপোর্ট, জন্ম নিবন্ধন ও অনলাইন জিডি।" }
-    ];
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><h2>কেন E-Solution ব্যবহার করবেন?</h2><p>সহজ, পরিষ্কার ও ব্যবহারবান্ধব অভিজ্ঞতা</p></div>
+    <div class="features">
+      <div class="feature"><span class="feature-icon">🔐</span><div><strong>তথ্যের নিরাপত্তা</strong><small>ব্যক্তিগত কাগজপত্র সাবধানে পরিচালনা</small></div></div>
+      <div class="feature"><span class="feature-icon">⚡</span><div><strong>সহজ নির্দেশনা</strong><small>প্রয়োজনীয় ধাপগুলো এক জায়গায়</small></div></div>
+      <div class="feature"><span class="feature-icon">📱</span><div><strong>মোবাইল-ফ্রেন্ডলি</strong><small>মোবাইল ও কম্পিউটারে ব্যবহারযোগ্য</small></div></div>
+      <div class="feature"><span class="feature-icon">💬</span><div><strong>সহায়তা</strong><small>প্রশ্নের উত্তর ও যোগাযোগের ব্যবস্থা</small></div></div>
+    </div>
+  </div>
+</section>
 
-    function App() {
-      const [view, setView] = useState("home");
-      const [selectedSrv, setSelectedSrv] = useState(VUMI_SERVICES[0].title);
-      const [apps, setApps] = useState([]);
-      const [lastId, setLastId] = useState("");
-      const [trackQuery, setTrackQuery] = useState("");
-      const [trackResult, setTrackResult] = useState(null);
-      const [trackMsg, setTrackMsg] = useState("");
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head"><h2>কীভাবে সেবা নেবেন?</h2><p>মাত্র চারটি সহজ ধাপ</p></div>
+    <div class="steps">
+      <div class="step"><span class="step-num">১</span><b>সেবা নির্বাচন করুন</b><span>আপনার প্রয়োজনের কার্ড খুলুন।</span></div>
+      <div class="step"><span class="step-num">২</span><b>তথ্য ও কাগজ দেখুন</b><span>প্রয়োজনীয় নথি, খরচ ও নিয়ম জানুন।</span></div>
+      <div class="step"><span class="step-num">৩</span><b>আবেদন জমা দিন</b><span>সংশ্লিষ্ট কার্যকর ফরম বা সরকারি পোর্টাল ব্যবহার করুন।</span></div>
+      <div class="step"><span class="step-num">৪</span><b>অগ্রগতি দেখুন</b><span>আবেদন নম্বর থাকলে ট্র্যাকিং ব্যবহার করুন।</span></div>
+    </div>
+  </div>
+</section>
 
-      // Calculator state
-      const [len, setLen] = useState("");
-      const [wid, setWid] = useState("");
-
-      // Admin auth
-      const [isAdmin, setIsAdmin] = useState(false);
-      const [phone, setPhone] = useState("");
-      const [pass, setPass] = useState("");
-
-      useEffect(() => {
-        const saved = localStorage.getItem("esolution_apps_v2");
-        if (saved) {
-          setApps(JSON.parse(saved));
-        } else {
-          const demo = [{
-            trackingId: "ES-2026-1001",
-            name: "মোঃ রফিকুল ইসলাম",
-            mobile: "01711000000",
-            service: "ই-নামজারি (মিউটেশন) আবেদন",
-            status: "Processing",
-            note: "ইউনিয়ন ভূমি অফিসে নথিপত্র যাচাই চলছে।"
-          }];
-          setApps(demo);
-          localStorage.setItem("esolution_apps_v2", JSON.stringify(demo));
-        }
-      }, []);
-
-      const saveApps = (list) => {
-        setApps(list);
-        localStorage.setItem("esolution_apps_v2", JSON.stringify(list));
-      };
-
-      const handleApply = (e) => {
-        e.preventDefault();
-        const fd = new FormData(e.target);
-        const id = `ES-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-        const newApp = {
-          trackingId: id,
-          name: fd.get("name"),
-          mobile: fd.get("mobile"),
-          service: selectedSrv,
-          status: "Pending",
-          note: "আবেদন সফলভাবে জমা হয়েছে। প্রতিনিধি দ্রুত যোগাযোগ করবেন।"
-        };
-        saveApps([newApp, ...apps]);
-        setLastId(id);
-        e.target.reset();
-      };
-
-      const handleSearch = (e) => {
-        if (e) e.preventDefault();
-        setTrackMsg("");
-        const q = trackQuery.trim().toLowerCase();
-        const found = apps.find(a => a.trackingId.toLowerCase() === q || a.mobile === q);
-        if (found) setTrackResult(found);
-        else {
-          setTrackResult(null);
-          setTrackMsg("কোনো আবেদন পাওয়া যায়নি! ডেমো দেখতে লিখুন: ES-2026-1001");
-        }
-      };
-
-      const sq = (parseFloat(len) || 0) * (parseFloat(wid) || 0);
-      const shotok = (sq / 435.6).toFixed(2);
-      const katha = (sq / 720).toFixed(2);
-
-      return (
-        <div className="min-h-screen flex flex-col text-slate-800">
-          {/* HEADER */}
-          <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-              <div onClick={() => setView("home")} className="cursor-pointer flex items-center gap-2">
-                <div className="w-10 h-10 bg-emerald-700 text-white rounded-xl flex items-center justify-center font-black text-xl">E</div>
-                <div>
-                  <h1 className="font-extrabold text-lg leading-none">E-Solution</h1>
-                  <p className="text-[11px] text-emerald-700 font-bold">সহজ সমাধান, সবার জন্য</p>
-                </div>
-              </div>
-              <nav className="flex gap-2 text-xs md:text-sm font-bold">
-                <button onClick={() => setView("home")} className={`px-3 py-2 rounded-lg ${view === "home" ? "bg-emerald-700 text-white" : "hover:bg-slate-100"}`}>হোম</button>
-                <button onClick={() => setView("apply")} className={`px-3 py-2 rounded-lg ${view === "apply" ? "bg-emerald-700 text-white" : "hover:bg-slate-100"}`}>আবেদন</button>
-                <button onClick={() => setView("track")} className={`px-3 py-2 rounded-lg ${view === "track" ? "bg-emerald-700 text-white" : "hover:bg-slate-100"}`}>ট্র্যাকিং</button>
-                <button onClick={() => setView("admin")} className="bg-amber-400 px-3 py-2 rounded-lg text-slate-950">অ্যাডমিন</button>
-              </nav>
-            </div>
-          </header>
-
-          {/* MAIN CONTENT */}
-          <main className="flex-1 max-w-7xl w-full mx-auto p-4 py-8">
-            {view === "home" && (
-              <div className="space-y-10">
-                {/* Hero */}
-                <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-8 rounded-3xl shadow-xl grid md:grid-cols-2 gap-6 items-center">
-                  <div>
-                    <span className="bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full">ডিজিটাল সেবা পোর্টাল</span>
-                    <h2 className="text-3xl font-black mt-3">ভূমি ও মৌলিক নাগরিক সেবা এখন এক ক্লিকে</h2>
-                    <p className="text-xs md:text-sm text-emerald-100 mt-2">ই-নামজারি, পর্চা, খাজনা এবং ৬টি মৌলিক সেবার জন্য ঘরে বসে আবেদন করুন।</p>
-                  </div>
-                  <div className="bg-white text-slate-800 p-5 rounded-2xl shadow">
-                    <h3 className="font-bold text-sm mb-2 text-emerald-900">🛰️ দ্রুত আবেদন ট্র্যাকিং</h3>
-                    <form onSubmit={(e) => { e.preventDefault(); handleSearch(); setView("track"); }} className="flex gap-2">
-                      <input type="text" value={trackQuery} onChange={e => setTrackQuery(e.target.value)} placeholder="ট্র্যাকিং আইডি (ES-2026-1001)..." className="flex-1 border rounded-xl px-3 py-2 text-xs" required />
-                      <button type="submit" className="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl">খুঁজুন</button>
-                    </form>
-                  </div>
-                </div>
-
-                {/* Vumi Seba Cards */}
-                <div>
-                  <h3 className="text-xl font-extrabold text-emerald-950 mb-4">🏡 বিশেষ ভূমি সেবা (কার্ড নং ১)</h3>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {VUMI_SERVICES.map(s => (
-                      <div key={s.id} className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
-                        <div>
-                          <div className="text-3xl mb-2">{s.icon}</div>
-                          <h4 className="font-bold text-slate-900">{s.title}</h4>
-                          <p className="text-xs text-slate-500 mt-1 mb-3">{s.desc}</p>
-                        </div>
-                        <button onClick={() => { setSelectedSrv(s.title); setView("apply"); }} className="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2 rounded-xl">আবেদন করুন →</button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 6 Moulik Seba Cards */}
-                <div>
-                  <h3 className="text-xl font-extrabold text-slate-950 mb-4">🌟 মানুষের ৬টি মৌলিক সেবা (কার্ড নং ২ থেকে ৭)</h3>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {MOULIK_SERVICES.map(m => (
-                      <div key={m.id} className="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
-                        <div>
-                          <h4 className="font-bold text-slate-900 text-base">{m.title}</h4>
-                          <p className="text-xs text-slate-500 mt-1 mb-4">{m.desc}</p>
-                        </div>
-                        <button onClick={() => { setSelectedSrv(m.title); setView("apply"); }} className="w-full bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl transition">সেবা বিস্তারিত ও আবেদন →</button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Calculator Box */}
-                <div className="bg-white p-6 rounded-2xl border shadow-sm">
-                  <h3 className="text-lg font-bold text-emerald-950 mb-2">📐 জমির পরিমাপ ক্যালকুলেটর (শতক ও কাঠা)</h3>
-                  <div className="grid sm:grid-cols-2 gap-3 mb-4">
-                    <input type="number" value={len} onChange={e => setLen(e.target.value)} placeholder="দৈর্ঘ্য (ফুট)" className="border rounded-xl px-3 py-2 text-xs" />
-                    <input type="number" value={wid} onChange={e => setWid(e.target.value)} placeholder="প্রস্থ (ফুট)" className="border rounded-xl px-3 py-2 text-xs" />
-                  </div>
-                  <div className="bg-emerald-900 text-white p-4 rounded-xl grid grid-cols-3 text-center text-xs">
-                    <div>বর্গফুট: <strong>{sq.toFixed(1)}</strong></div>
-                    <div>শতক: <strong className="text-amber-300">{shotok}</strong></div>
-                    <div>কাঠা: <strong className="text-emerald-300">{katha}</strong></div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {view === "apply" && (
-              <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl border shadow-sm">
-                <h3 className="text-xl font-extrabold text-emerald-900 mb-2">📝 অনলাইন আবেদন ফরম</h3>
-                {lastId && (
-                  <div className="mb-4 bg-emerald-50 border p-3 rounded-xl text-center text-xs">
-                    ✅ সফল! আপনার ট্র্যাকিং আইডি: <strong className="text-emerald-800 text-sm">{lastId}</strong>
-                  </div>
-                )}
-                <form onSubmit={handleApply} className="space-y-3 text-xs">
-                  <div>
-                    <label className="font-bold block mb-1">সেবার নাম:</label>
-                    <input type="text" value={selectedSrv} readOnly className="w-full border rounded-xl px-3 py-2 bg-slate-100 font-bold" />
-                  </div>
-                  <div>
-                    <label className="font-bold block mb-1">আপনার নাম *</label>
-                    <input name="name" required placeholder="পূর্ণ নাম" className="w-full border rounded-xl px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="font-bold block mb-1">মোবাইল নম্বর *</label>
-                    <input name="mobile" required placeholder="017XXXXXXXX" className="w-full border rounded-xl px-3 py-2" />
-                  </div>
-                  <button type="submit" className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl">আবেদন জমা দিন</button>
-                </form>
-              </div>
-            )}
-
-            {view === "track" && (
-              <div className="max-w-xl mx-auto bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-                <h3 className="text-xl font-extrabold text-emerald-900">🛰️ লাইভ আবেদন ট্র্যাকিং</h3>
-                <form onSubmit={handleSearch} className="flex gap-2">
-                  <input type="text" value={trackQuery} onChange={e => setTrackQuery(e.target.value)} placeholder="ট্র্যাকিং আইডি বা মোবাইল নম্বর..." className="flex-1 border rounded-xl px-3 py-2 text-xs" />
-                  <button type="submit" className="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl">খুঁজুন</button>
-                </form>
-                {trackMsg && <p className="text-rose-600 text-xs font-bold">{trackMsg}</p>}
-                {trackResult && (
-                  <div className="bg-emerald-50 border p-4 rounded-xl text-xs space-y-2">
-                    <div><strong>ট্র্যাকিং আইডি:</strong> {trackResult.trackingId}</div>
-                    <div><strong>সেবা:</strong> {trackResult.service}</div>
-                    <div><strong>আবেদনকারী:</strong> {trackResult.name} ({trackResult.mobile})</div>
-                    <div><strong>বর্তমান স্ট্যাটাস:</strong> <span className="bg-amber-400 px-2 py-0.5 rounded font-bold">{trackResult.status}</span></div>
-                    <div><strong>অফিসিয়াল নোট:</strong> {trackResult.note}</div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {view === "admin" && (
-              <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl border shadow-sm">
-                {!isAdmin ? (
-                  <div className="max-w-sm mx-auto space-y-3 text-xs">
-                    <h3 className="font-bold text-sm text-emerald-900">অ্যাডমিন লগইন (ডেমো: 01700000000 / admin)</h3>
-                    <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="ফোন নম্বর" className="w-full border rounded-xl px-3 py-2" />
-                    <input type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="পাসওয়ার্ড" className="w-full border rounded-xl px-3 py-2" />
-                    <button onClick={() => { if(phone==="01700000000" && pass==="admin") setIsAdmin(true); else alert("ভুল তথ্য!"); }} className="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl">লগইন</button>
-                  </div>
-                ) : (
-                  <div className="space-y-4 text-xs">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-bold text-sm">সকল আবেদন নিয়ন্ত্রণ ({apps.length}টি)</h3>
-                      <button onClick={() => setIsAdmin(false)} className="text-rose-600 font-bold">লগআউট</button>
-                    </div>
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-100 border-b">
-                          <th className="p-2">আইডি</th>
-                          <th className="p-2">গ্রাহক</th>
-                          <th className="p-2">সেবা</th>
-                          <th className="p-2">স্ট্যাটাস</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {apps.map(a => (
-                          <tr key={a.trackingId} className="border-b">
-                            <td className="p-2 font-bold text-emerald-800">{a.trackingId}</td>
-                            <td className="p-2">{a.name} ({a.mobile})</td>
-                            <td className="p-2">{a.service}</td>
-                            <td className="p-2">
-                              <select value={a.status} onChange={e => {
-                                const upd = apps.map(x => x.trackingId === a.trackingId ? {...x, status: e.target.value} : x);
-                                saveApps(upd);
-                              }} className="border rounded px-1 py-0.5 font-bold">
-                                <option value="Pending">Pending</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Completed">Completed</option>
-                              </select>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            )}
-          </main>
-
-          <footer className="bg-slate-900 text-slate-400 text-xs py-6 text-center mt-12">
-            © ২০২৬ E-Solution | সমস্ত অধিকার সংরক্ষিত।
-          </footer>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-  </script>
+<section class="section" id="help">
+  <div class="wrap bottom-grid">
+    <div class="panel"><h3>🤝 আপনার সাহায্য প্রয়োজন?</h3><p>সেবা বেছে নিতে বা ফরম বুঝতে সহায়তা চান? আপনার প্রকৃত যোগাযোগের তথ্য এখানে বসান।</p><a class="btn" href="contact.html">যোগাযোগ করুন →</a><p class="notice">এখানে নিজের ফোন/WhatsApp নম্বর ও ইমেইল যোগ করুন।</p></div>
+    <div class="panel"><h3>⚡ দ্রুত লিংক</h3><div class="quicklinks"><a href="#services">সব সেবা</a><a href="#tracking">আবেদন ট্র্যাকিং</a><a href="#how">আবেদনের নিয়ম</a><a href="faq.html">সাধারণ প্রশ্ন</a><a href="privacy.html">গোপনীয়তা নীতি</a><a href="terms.html">শর্তাবলি</a></div></div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap"><div class="footer-row"><a class="brand" href="#home" style="color:white"><span class="logo">🌱</span><span>E-Solution<small style="display:block;font-size:.68rem;font-weight:500;color:#c9d8e8">সহজ সমাধান, সবার জন্য</small></span></a><div class="footer-links"><a href="#home">হোম</a><a href="#services">সেবাসমূহ</a><a href="#tracking">ট্র্যাকিং</a><a href="privacy.html">গোপনীয়তা</a><a href="terms.html">শর্তাবলি</a><a href="contact.html">যোগাযোগ</a></div></div><div class="copyright">© <span id="year"></span> E-Solution। সর্বস্বত্ব সংরক্ষিত।<br>এটি বেসরকারি তথ্য ও আবেদন-সহায়তা পোর্টাল; সরকারি কর্তৃপক্ষের বিকল্প নয়।</div></div></footer>
+<script>
+const searchForm=document.getElementById('searchForm');
+const searchInput=document.getElementById('serviceSearch');
+const searchMessage=document.getElementById('searchMessage');
+searchForm.addEventListener('submit',function(e){
+  e.preventDefault();
+  const q=searchInput.value.trim().toLocaleLowerCase('bn-BD');
+  const cards=[...document.querySelectorAll('.service-card')];
+  cards.forEach(card=>card.hidden=false);
+  if(!q){searchMessage.style.display='block';searchMessage.textContent='সেবার নাম লিখে খুঁজুন।';return;}
+  const matches=cards.filter(card=>(card.innerText+' '+card.dataset.keywords).toLocaleLowerCase('bn-BD').includes(q));
+  cards.forEach(card=>card.hidden=!matches.includes(card));
+  searchMessage.style.display='block';
+  searchMessage.textContent=matches.length?`আপনার খোঁজের সঙ্গে মিলে ${matches.length}টি সেবা পাওয়া গেছে।`:'মিল পাওয়া যায়নি। অন্য শব্দ দিয়ে চেষ্টা করুন অথবা সহায়তা নিন।';
+  document.getElementById('services').scrollIntoView({behavior:'smooth'});
+});
+document.getElementById('trackingForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const id=document.getElementById('trackingId').value.trim();
+  const box=document.getElementById('trackingMessage');
+  box.style.display='block';
+  box.textContent=`${id} — ট্র্যাকিং সেবা এখন ডেমো মোডে আছে। বাস্তব স্ট্যাটাস দেখতে ব্যাকএন্ড/ডেটাবেস সংযোগ প্রয়োজন।`;
+});
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
 </body>
-</html>
+</html>'''
+
+(out / "index.html").write_text(html, encoding="utf-8")
+
+readme = """# E-Solution Homepage
+
+## ফাইল
+- `index.html`: সম্পূর্ণ responsive homepage (HTML, CSS, JavaScript একই ফাইলে)
+- `services/`: প্রতিটি ৭টি সেবার জন্য আলাদা detail-page template
+- `apply.html`: ডেমো আবেদন পৃষ্ঠা
+- `contact.html`: যোগাযোগ পৃষ্ঠা
+- `faq.html`, `privacy.html`, `terms.html`: প্রাথমিক তথ্য পৃষ্ঠা
+
+## চালানোর নিয়ম
+`index.html` ব্রাউজারে খুলুন অথবা GitHub repository-তে ফাইলগুলো আপলোড করুন।
+
+## গুরুত্বপূর্ণ
+এই প্যাকেজটি frontend demo। বাস্তব আবেদন জমা, নিরাপদ ডকুমেন্ট আপলোড, লগইন/অ্যাডমিন এবং প্রকৃত ট্র্যাকিংয়ের জন্য backend/database ও নিরাপত্তা ব্যবস্থা যোগ করতে হবে। সরকারি সেবার লিংক এবং যোগাযোগের তথ্য যাচাই করে বসান।
+"""
+(out / "README.md").write_text(readme, encoding="utf-8")
+
+# service detail pages, each with own buttons and accurate expectation setting
+services = {
+"land": ("ভূমি সেবা", "🌿", "ই-নামজারি, ভূমি উন্নয়ন কর, খতিয়ান-পর্চা, মৌজা ম্যাপ ও দলিলের নকল সম্পর্কে নির্দেশনা।"),
+"agriculture": ("কৃষি ও সরকারি সহায়তা", "🌾", "কৃষি তথ্য, সার-বীজ সহায়তা এবং প্রযোজ্য সরকারি কর্মসূচির তথ্য।"),
+"business": ("ব্যবসা ও উদ্যোক্তা", "🏪", "ব্যবসা নিবন্ধন, প্রশিক্ষণ ও উদ্যোক্তা সহায়তা সম্পর্কে তথ্য।"),
+"housing": ("বাড়ি ও সম্পত্তি", "🏠", "হোল্ডিং কর, আবাসন প্রকল্প ও বাড়ির নকশা অনুমোদন বিষয়ে তথ্য।"),
+"education": ("শিক্ষা ও প্রশিক্ষণ", "🎓", "ভর্তি, উপবৃত্তি, সনদ সংশোধন ও দক্ষতা প্রশিক্ষণ সম্পর্কে তথ্য।"),
+"health": ("স্বাস্থ্য ও জরুরি সহায়তা", "🩺", "স্বাস্থ্যসেবা তথ্য, হাসপাতাল যোগাযোগ ও জরুরি সহায়তার নির্দেশনা।"),
+"citizen": ("নাগরিক কাগজপত্র ও আইন", "🪪", "NID, পাসপোর্ট, জন্ম নিবন্ধন ও অনলাইন জিডি-সংক্রান্ত নির্দেশনা।")
+}
+for slug, (name, icon, desc) in services.items():
+    page = f'''<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{name} | E-Solution</title><style>
+body{{font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif;margin:0;background:#f5fafb;color:#19324c;line-height:1.7}}main{{max-width:780px;margin:40px auto;padding:28px;width:92%;background:#fff;border:1px solid #e3edf3;border-radius:20px}}a,button{{display:inline-block;padding:11px 16px;border-radius:10px;text-decoration:none;border:0;font:inherit;cursor:pointer}}.primary{{background:#138743;color:white}}.secondary{{background:#e8f3ff;color:#155a91}}.icon{{font-size:50px}}h1{{color:#123b68}}.notice{{padding:14px;background:#fff8df;border-radius:10px;color:#795a00}}</style></head><body><main><div class="icon">{icon}</div><h1>{name}</h1><p>{desc}</p><h2>শুরু করার আগে</h2><ul><li>সংশ্লিষ্ট সেবার যোগ্যতা ও প্রয়োজনীয় কাগজপত্র যাচাই করুন।</li><li>সরকারি ফি এবং বেসরকারি সহায়তা-ফি আলাদা করে বুঝে নিন।</li><li>আসল নথি বা সংবেদনশীল তথ্য কেবল যাচাইকৃত ও নিরাপদ ব্যবস্থায় দিন।</li></ul><p class="notice">E-Solution সরকারি কর্তৃপক্ষ নয়। এখানে দেখানো তথ্য সহায়ক নির্দেশনা; আবেদন অনুমোদন বা সরকারি নথি ইস্যুর নিশ্চয়তা নয়।</p><p><a class="primary" href="../apply.html?service={slug}">এই সেবার জন্য আবেদন-সহায়তা</a> <a class="secondary" href="../index.html#services">← সব সেবা</a></p></main></body></html>'''
+    (out / "services" / f"{slug}.html").parent.mkdir(exist_ok=True)
+    (out / "services" / f"{slug}.html").write_text(page, encoding="utf-8")
+
+apply_page = '''<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>আবেদন-সহায়তা | E-Solution</title><style>body{font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif;background:#f5fafb;color:#19324c;margin:0}main{max-width:680px;margin:35px auto;background:white;padding:25px;width:92%;border-radius:18px}label{display:block;margin-top:14px}input,select,textarea{width:100%;padding:12px;border:1px solid #d4e0e8;border-radius:9px;font:inherit}button,a{display:inline-block;padding:11px 16px;border:0;border-radius:9px;background:#138743;color:white;text-decoration:none;font:inherit;margin-top:18px}.notice{background:#fff8df;padding:12px;border-radius:9px}</style></head><body><main><h1>আবেদন-সহায়তার অনুরোধ</h1><p class="notice">এটি কেবল নমুনা ফরম। বর্তমানে তথ্য কোথাও জমা হয় না। বাস্তবে ব্যবহার করার আগে নিরাপদ ব্যাকএন্ড, গোপনীয়তা নীতি ও যোগাযোগের ব্যবস্থা যুক্ত করুন।</p><form id="demo"><label>সেবা নির্বাচন<select id="service"><option value="land">ভূমি সেবা</option><option value="agriculture">কৃষি ও সরকারি সহায়তা</option><option value="business">ব্যবসা ও উদ্যোক্তা</option><option value="housing">বাড়ি ও সম্পত্তি</option><option value="education">শিক্ষা ও প্রশিক্ষণ</option><option value="health">স্বাস্থ্য ও জরুরি সহায়তা</option><option value="citizen">নাগরিক কাগজপত্র ও আইন</option></select></label><label>আপনার নাম<input required placeholder="পূর্ণ নাম"></label><label>যোগাযোগ নম্বর<input required inputmode="tel" placeholder="মোবাইল নম্বর"></label><label>কী সহায়তা প্রয়োজন?<textarea rows="4" placeholder="ব্যক্তিগত পরিচয়পত্র নম্বর বা গোপন তথ্য এখানে লিখবেন না"></textarea></label><button type="submit">ডেমো জমা দিন</button></form><p id="msg"></p><a href="index.html">হোমপেজে ফিরুন</a><script>const p=new URLSearchParams(location.search).get('service');if(p)document.getElementById('service').value=p;document.getElementById('demo').addEventListener('submit',e=>{e.preventDefault();document.getElementById('msg').textContent='এটি ডেমো ফরম—আপনার তথ্য জমা হয়নি। বাস্তব জমার ব্যবস্থা এখনো যুক্ত করা হয়নি।';});</script></main></body></html>'''
+(out / "apply.html").write_text(apply_page, encoding="utf-8")
+
+for filename, title, body in [
+("contact.html","যোগাযোগ","নিজের যাচাইকৃত ফোন নম্বর, ইমেইল এবং WhatsApp লিংক এখানে যোগ করুন।"),
+("faq.html","সাধারণ প্রশ্ন","প্রতিটি সেবার যোগ্যতা, কাগজপত্র, ফি ও সরকারি আবেদন লিংক যাচাই করে এখানে প্রকাশ করুন।"),
+("privacy.html","গোপনীয়তা নীতি","বাস্তব সেবা চালুর আগে কী তথ্য সংগ্রহ করা হবে, কেন প্রয়োজন, কতদিন রাখা হবে এবং কীভাবে মুছে ফেলা যাবে—তা স্পষ্টভাবে লিখুন।"),
+("terms.html","ব্যবহারের শর্তাবলি","E-Solution একটি বেসরকারি তথ্য ও আবেদন-সহায়তা পোর্টাল। সরকারি কর্তৃপক্ষের সিদ্ধান্ত, অনুমোদন বা নথি ইস্যুর নিশ্চয়তা দেওয়া হয় না।")
+]:
+    page=f'''<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{title} | E-Solution</title><style>body{{font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif;background:#f5fafb;color:#19324c;line-height:1.7}}main{{max-width:760px;margin:40px auto;padding:28px;width:92%;background:white;border-radius:18px}}a{{color:#138743}}</style></head><body><main><h1>{title}</h1><p>{body}</p><a href="index.html">← হোমপেজে ফিরুন</a></main></body></html>'''
+    (out / filename).write_text(page, encoding="utf-8")
+
+zip_path = Path("/mnt/data/E-Solution-Homepage-Package.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for p in out.rglob("*"):
+        if p.is_file():
+            z.write(p, p.relative_to(out.parent))
+print(f"Created {zip_path} with {sum(1 for p in out.rglob('*') if p.is_file())} files")
